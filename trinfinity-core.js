@@ -3,13 +3,17 @@
    Main entry point. Wires all modules together.
    by trinity (trinachronism)
    https://github.com/trinibots/trinfinity
-   v0.3.0
+   v0.3.1
    ============================================================ */
 
 (function () {
   'use strict';
 
-  const TF_VERSION = '0.3.0';
+  /* ── Base path — hardcoded to avoid document.currentScript
+     timing issues when called from within functions ── */
+  const TF_BASE    = '/scripts/extensions/third-party/trinfinity/';
+
+  const TF_VERSION = '0.3.1';
   const TF_KEY     = 'trinfinity_settings';
 
   const TF_STYLES = ['gossamer', 'fade', 'pulse', 'ebb', 'flow', 'void', 'loom'];
@@ -91,9 +95,11 @@
     setVar('--tf-pulse-radius',           cfg.pulseRadius + 'px');
     setVar('--tf-pulse-r',                cfg.pulseR);
     setVar('--tf-pulse-g',                cfg.pulseG);
-    setVar('--tf-pulse-b',                cfg.pulseB);
+    setVar('--tf-pulse-b',               cfg.pulseB);
     setVar('--tf-ebb-opacity',            (cfg.ebbOpacity / 100).toFixed(2));
     setVar('--tf-ebb-desaturate',         cfg.ebbDesaturate + '%');
+    /* Pre-computed saturate value: 0 desat = saturate(1), 100 desat = saturate(0) */
+    setVar('--tf-ebb-saturate',           (1 - cfg.ebbDesaturate / 100).toFixed(2));
     setVar('--tf-flow-scale',             (cfg.flowScale / 100).toFixed(2));
     setVar('--tf-flow-vibrancy',          (cfg.flowVibrancy / 100).toFixed(2));
     setVar('--tf-void-lh',                (cfg.voidLineHeight / 100).toFixed(2));
@@ -115,7 +121,6 @@
     if (typeof tfApplyTheme === 'function') {
       tfApplyTheme(themeKey, cfg, setVar);
     } else {
-      /* Fallback: just set the attribute */
       document.documentElement.setAttribute('data-tf-theme', themeKey);
       cfg.theme = themeKey;
     }
@@ -201,10 +206,8 @@
     }
   }
 
-  /* ── Inline-load all src/ modules then initialise ──
-     ST extensions load as a single JS file, so we inline
-     the module contents via script tags here. */
-  function loadModules(callbacks) {
+  /* ── Load all src/ modules then initialise ── */
+  function loadModules(callback) {
     const modules = [
       'src/trinfinity-themes.js',
       'src/trinfinity-fonts.js',
@@ -214,15 +217,11 @@
     ];
 
     let loaded = 0;
-    modules.forEach(src => {
+    modules.forEach(mod => {
       const script = document.createElement('script');
-      /* Resolve relative to this extension's folder */
-      const base = (document.currentScript && document.currentScript.src)
-        ? document.currentScript.src.replace(/[^/]+$/, '')
-        : '/scripts/extensions/third-party/trinfinity/';
-      script.src = base + src;
-      script.onload  = () => { loaded++; if (loaded === modules.length) callbacks(); };
-      script.onerror = () => { loaded++; if (loaded === modules.length) callbacks(); };
+      script.src     = TF_BASE + mod;
+      script.onload  = () => { loaded++; if (loaded === modules.length) callback(); };
+      script.onerror = () => { loaded++; if (loaded === modules.length) callback(); };
       document.head.appendChild(script);
     });
   }
@@ -233,7 +232,6 @@
     applyAllVars();
 
     loadModules(() => {
-      /* Apply theme + font now modules are ready */
       applyTheme(cfg.theme);
       applyFont(cfg.font);
       loadCustomFonts(cfg);
@@ -244,7 +242,6 @@
         buildPanel();
         addExtensionMenuEntry();
 
-        /* Avatar enhancement — slight delay to let ST render chat */
         setTimeout(() => {
           if (typeof tfStartAvatarObserver === 'function') {
             tfStartAvatarObserver(cfg);
