@@ -1,0 +1,16 @@
+{
+  "display_name": "Trinfinity",
+  "version": "0.1.0",
+  "description": "A sensory UI theme system for SillyTavern. Dark, sophisticated, visual. Built by trinity.",
+  "author": "trinity (trinachronism)",
+  "homePage": "",
+  "requires": [],
+  "optional": [],
+  "js": "trinfinity-core.js",
+  "css": "trinfinity-styles.css",
+  "author_note": "Trinfinity is a personal theme system. All styles, names, and concepts are original.",
+  "content_security_policy": {
+    "script-src": "self cdnjs.cloudflare.com fonts.googleapis.com fonts.gstatic.com",
+    "style-src": "self fonts.googleapis.com fonts.gstatic.com"
+  }
+}
