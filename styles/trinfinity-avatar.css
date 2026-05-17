@@ -2,6 +2,8 @@
    TRINFINITY — styles/trinfinity-avatar.css
    Portrait injection system CSS
    Per-style portrait treatments
+
+   v0.3.1 — ghost portrait stack, gossamer vignette
    ============================================================ */
 
 /* ── Base avatar wrapper ── */
@@ -10,6 +12,7 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  gap: 4px !important;
 }
 
 /* Hide the original small thumbnail once portrait is injected */
@@ -26,6 +29,20 @@
   overflow: hidden !important;
   border-radius: 4px !important;
   transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease !important;
+}
+
+/* ── Ghost portraits (previous messages in sidebar stack) ── */
+.tf-portrait-ghost {
+  opacity: 0.38 !important;
+  transform: scale(0.92) !important;
+  filter: saturate(0.5) !important;
+  pointer-events: none !important;
+}
+
+.tf-portrait-ghost + .tf-portrait-ghost {
+  opacity: 0.18 !important;
+  transform: scale(0.84) !important;
+  filter: saturate(0.2) !important;
 }
 
 /* ── Portrait image ── */
@@ -80,18 +97,23 @@
    PER-STYLE PORTRAIT TREATMENTS
    ============================================================ */
 
-/* ── GOSSAMER — radial feather dissolve ── */
+/* ── GOSSAMER — corner vignette (not feather) ── */
+[data-tf-style="gossamer"] .tf-portrait::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0,0,0,0.55) 100%
+  ) !important;
+  pointer-events: none !important;
+}
+
+/* Remove old feather mask from gossamer */
 [data-tf-style="gossamer"] .tf-portrait-img {
-  mask-image: radial-gradient(
-    ellipse at center,
-    black 45%,
-    transparent calc(45% + var(--tf-gossamer-feather))
-  ) !important;
-  -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    black 45%,
-    transparent calc(45% + var(--tf-gossamer-feather))
-  ) !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
 }
 
 /* ── FADE — horizontal gradient dissolve into message ── */
@@ -129,12 +151,12 @@
   ) !important;
 }
 
-/* ── PULSE — breathing glow border on portrait edge ── */
+/* ── PULSE — border only, NO animation on portrait container ── */
 [data-tf-style="pulse"] .tf-portrait {
   border-radius: 0 !important;
   border-left: 1px solid
     rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.5) !important;
-  animation: tf-pulse-breathe var(--tf-pulse-speed) ease-in-out infinite !important;
+  animation: none !important;
 }
 
 [data-tf-style="pulse"] .mes[is_user="true"] .tf-portrait {
@@ -146,12 +168,13 @@
 /* ── EBB — portrait recedes, desaturated, like a memory ── */
 [data-tf-style="ebb"] .tf-portrait-img {
   opacity: var(--tf-ebb-opacity) !important;
-  filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 100)) !important;
+  filter: saturate(var(--tf-ebb-saturate)) !important;
+  transition: opacity 0.4s ease, filter 0.4s ease !important;
 }
 
 [data-tf-style="ebb"] .mes:hover .tf-portrait-img {
   opacity: calc(var(--tf-ebb-opacity) + 0.2) !important;
-  filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 150)) !important;
+  filter: saturate(calc(var(--tf-ebb-saturate) * 1.5)) !important;
 }
 
 /* ── FLOW — portrait advances, full colour, scaled ── */

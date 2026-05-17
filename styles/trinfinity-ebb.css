@@ -1,6 +1,9 @@
 /* ============================================================
    TRINFINITY — styles/trinfinity-ebb.css
    Ebb: portrait recedes · desaturated · fading like memory
+
+   v0.3.1 — uses --tf-ebb-saturate (pre-computed in JS)
+             instead of broken CSS calc with % unit
    ============================================================ */
 
 [data-tf-style="ebb"] .mes {

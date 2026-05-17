@@ -1,245 +1,267 @@
 /* ============================================================
-   TRINFINITY — src/trinfinity-panel.js
-   Floating lemniscate button + settings panel UI
+   TRINFINITY — trinfinity-core.js
+   Main entry point. Wires all modules together.
+   by trinity (trinachronism)
+   https://github.com/trinibots/trinfinity
+   v0.3.0
    ============================================================ */
 
-function tfMakeLemniscateSVG() {
-  /* Lemniscate with bisecting line + triangle at intersection —
-     combination of the inside-eye and bisect-line concepts */
-  return `<svg viewBox="0 0 52 30" xmlns="http://www.w3.org/2000/svg" class="tf-btn-svg">
-    <!-- Lemniscate curve -->
-    <path d="M26 15
-      C26 15 20 4 11 4
-      C4.5 4 2 8.8 2 15
-      C2 21.2 4.5 26 11 26
-      C20 26 26 15 26 15
-      C26 15 32 4 41 4
-      C47.5 4 50 8.8 50 15
-      C50 21.2 47.5 26 41 26
-      C32 26 26 15 26 15Z"
-      stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Vertical bisect line through centre crossing point -->
-    <line x1="26" y1="5" x2="26" y2="25"
-      stroke-opacity="0.45" stroke-dasharray="1.5 2.5"/>
-    <!-- Triangle: apex up, base formed by the two crossing tangent points -->
-    <polygon points="26,5 20,20 32,20"
-      stroke-opacity="0.75" fill="none" stroke-linejoin="round"/>
-    <!-- Eye pupil — small circle at centre crossing -->
-    <circle cx="26" cy="15" r="1.5" fill="currentColor" opacity="0.6"/>
-  </svg>`;
-}
+(function () {
+  'use strict';
 
-function tfBuildButton(cfg, onToggle) {
-  const existing = document.getElementById('trinfinity-btn');
-  if (existing) existing.remove();
+  const TF_VERSION = '0.3.0';
+  const TF_KEY     = 'trinfinity_settings';
 
-  const btn = document.createElement('div');
-  btn.id        = 'trinfinity-btn';
-  btn.title     = 'Trinfinity';
-  btn.innerHTML = tfMakeLemniscateSVG();
-  btn.style.right  = cfg.btnX || '20px';
-  btn.style.bottom = cfg.btnY || '80px';
+  const TF_STYLES = ['gossamer', 'fade', 'pulse', 'ebb', 'flow', 'void', 'loom'];
 
-  btn.addEventListener('click', (e) => {
-    if (btn._dragged) { btn._dragged = false; return; }
-    onToggle();
-  });
+  /* ── Default settings ── */
+  const DEFAULTS = {
+    style:   'gossamer',
+    theme:   'ultraviolet',
+    font:    'A',
+    customDisplayFont: '',
+    customBodyFont:    '',
+    btnX:    '20px',
+    btnY:    '80px',
 
-  tfMakeDraggable(btn, cfg);
-  document.body.appendChild(btn);
-  return btn;
-}
+    portraitW: 120,
+    portraitH: 160,
 
-function tfMakeDraggable(el, cfg) {
-  let startX, startY, startRight, startBottom, moved;
+    gossamerBlur:    10,
+    gossamerOpacity: 72,
+    gossamerFeather: 32,
 
-  el.addEventListener('mousedown', (e) => {
-    if (e.button !== 0) return;
-    moved       = false;
-    startX      = e.clientX;
-    startY      = e.clientY;
-    startRight  = parseInt(el.style.right)  || 20;
-    startBottom = parseInt(el.style.bottom) || 80;
+    fadeStart:   40,
+    fadeReach:   70,
+    fadeFloor:   8,
 
-    function onMove(e) {
-      const dx = startX - e.clientX;
-      const dy = startY - e.clientY;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
-      el.style.right  = Math.max(0, startRight  + dx) + 'px';
-      el.style.bottom = Math.max(0, startBottom + dy) + 'px';
-    }
+    pulseSpeed:     2.4,
+    pulseIntensity: 70,
+    pulseRadius:    8,
+    pulseR:         139,
+    pulseG:         92,
+    pulseB:         246,
+    pulseAuto:      true,
 
-    function onUp() {
-      if (moved) {
-        el._dragged = true;
-        cfg.btnX    = el.style.right;
-        cfg.btnY    = el.style.bottom;
-      }
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup',   onUp);
-    }
+    ebbOpacity:    45,
+    ebbDesaturate: 60,
 
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup',   onUp);
-    e.preventDefault();
-  });
-}
+    flowScale:    106,
+    flowVibrancy: 115,
 
-function tfBuildPanel(cfg, deps) {
-  const {
-    TF_VERSION, TF_STYLES, TF_THEME_DATA, TF_FONT_PAIRS,
-    applyTheme, applyStyle, applyFont, setVar,
-    renderSliders, loadCustomFonts, saveSettings,
-    refreshPortraits,
-  } = deps;
+    voidLineHeight:    195,
+    voidLetterSpacing: 13,
 
-  const existing = document.getElementById('trinfinity-panel');
-  if (existing) existing.remove();
-
-  const panel = document.createElement('div');
-  panel.id = 'trinfinity-panel';
-
-  const themeOptions = Object.entries(TF_THEME_DATA)
-    .map(([k, v]) => `<option value="${k}" ${cfg.theme === k ? 'selected' : ''}>${v.label}</option>`)
-    .join('');
-
-  const styleOptions = TF_STYLES
-    .map(s => `<option value="${s}" ${cfg.style === s ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`)
-    .join('');
-
-  const fontOptions = Object.entries(TF_FONT_PAIRS)
-    .map(([k, v]) => `<option value="${k}" ${cfg.font === k ? 'selected' : ''}>${v.label}</option>`)
-    .join('');
-
-  panel.innerHTML = `
-    <div class="tf-panel-header">
-      <span class="tf-panel-title">∞ Trinfinity</span>
-      <button class="tf-panel-close" id="tf-close" title="Close">✕</button>
-    </div>
-    <div class="tf-panel-body">
-
-      <div class="tf-panel-section">
-        <span class="tf-section-label">Message Style</span>
-        <select class="tf-select" id="tf-style-select">${styleOptions}</select>
-      </div>
-
-      <div class="tf-panel-section">
-        <span class="tf-section-label">Colour Theme</span>
-        <select class="tf-select" id="tf-theme-select">${themeOptions}</select>
-      </div>
-
-      <div class="tf-panel-section">
-        <span class="tf-section-label">Font Pair</span>
-        <select class="tf-select" id="tf-font-select">${fontOptions}</select>
-        <div id="tf-custom-fonts" class="tf-custom-fonts"
-          style="display:${cfg.font === 'custom' ? 'flex' : 'none'}">
-          <input class="tf-input" id="tf-font-display-input"
-            placeholder="Display font (e.g. Playfair Display)"
-            value="${cfg.customDisplayFont || ''}"/>
-          <input class="tf-input" id="tf-font-body-input"
-            placeholder="Body font (e.g. Lora)"
-            value="${cfg.customBodyFont || ''}"/>
-          <button class="tf-btn-small" id="tf-font-load-btn">Load Fonts ↗</button>
-        </div>
-      </div>
-
-      <hr class="tf-divider"/>
-
-      <div class="tf-panel-section" id="tf-style-sliders"></div>
-
-      <hr class="tf-divider"/>
-
-      <div class="tf-panel-section tf-about">
-        <span>Trinfinity v${TF_VERSION}</span>
-        <span>by trinity (trinachronism)</span>
-        <a href="https://github.com/trinibots/trinfinity"
-          target="_blank" rel="noopener">github.com/trinibots/trinfinity</a>
-      </div>
-
-    </div>
-  `;
-
-  document.body.appendChild(panel);
-  tfPositionPanel(panel, cfg);
-
-  /* ── Events ── */
-
-  document.getElementById('tf-close')
-    .addEventListener('click', () => tfClosePanel());
-
-  document.getElementById('tf-style-select')
-    .addEventListener('change', (e) => {
-      applyStyle(e.target.value);
-      renderSliders(e.target.value);
-      saveSettings();
-    });
-
-  document.getElementById('tf-theme-select')
-    .addEventListener('change', (e) => {
-      applyTheme(e.target.value);
-      saveSettings();
-    });
-
-  document.getElementById('tf-font-select')
-    .addEventListener('change', (e) => {
-      const val = e.target.value;
-      applyFont(val);
-      document.getElementById('tf-custom-fonts').style.display =
-        val === 'custom' ? 'flex' : 'none';
-      saveSettings();
-    });
-
-  document.getElementById('tf-font-load-btn')
-    .addEventListener('click', () => {
-      cfg.customDisplayFont =
-        document.getElementById('tf-font-display-input').value.trim();
-      cfg.customBodyFont =
-        document.getElementById('tf-font-body-input').value.trim();
-      loadCustomFonts(cfg);
-      saveSettings();
-    });
-
-  /* Initial slider render */
-  renderSliders(cfg.style);
-
-  return panel;
-}
-
-function tfPositionPanel(panel, cfg) {
-  if (!panel) return;
-  const btn = document.getElementById('trinfinity-btn');
-  if (!btn) return;
-  const bRight  = parseInt(btn.style.right)  || 20;
-  const bBottom = parseInt(btn.style.bottom) || 80;
-  panel.style.right  = bRight + 'px';
-  panel.style.bottom = (bBottom + 56) + 'px';
-}
-
-function tfTogglePanel(cfg) {
-  const panel = document.getElementById('trinfinity-panel');
-  if (!panel) return;
-  const isOpen = panel.classList.toggle('tf-open');
-  if (isOpen) tfPositionPanel(panel, cfg);
-}
-
-function tfClosePanel() {
-  document.getElementById('trinfinity-panel')?.classList.remove('tf-open');
-}
-
-function tfAddExtensionMenuEntry(onToggle) {
-  const tryAdd = () => {
-    const menu = document.querySelector(
-      '#extensionsMenu, .extensions-menu, #extension-settings'
-    );
-    if (!menu) return;
-    if (document.getElementById('tf-ext-btn')) return;
-
-    const btn = document.createElement('div');
-    btn.id = 'tf-ext-btn';
-    btn.className = 'tf-ext-menu-btn';
-    btn.textContent = '∞ Trinfinity';
-    btn.addEventListener('click', onToggle);
-    menu.prepend(btn);
+    loomRadius:          3,
+    loomVignette:        55,
+    loomVignetteSpread:  60,
   };
-  setTimeout(tryAdd, 2000);
-}
+
+  /* ── Settings ── */
+  let cfg = Object.assign({}, DEFAULTS);
+
+  function loadSettings() {
+    try {
+      const raw = localStorage.getItem(TF_KEY);
+      if (raw) cfg = Object.assign({}, DEFAULTS, JSON.parse(raw));
+    } catch(e) {}
+  }
+
+  function saveSettings() {
+    try { localStorage.setItem(TF_KEY, JSON.stringify(cfg)); } catch(e) {}
+  }
+
+  /* ── CSS variable helper ── */
+  function setVar(name, value) {
+    document.documentElement.style.setProperty(name, String(value));
+  }
+
+  /* ── Apply all CSS vars from cfg ── */
+  function applyAllVars() {
+    setVar('--tf-portrait-w',            cfg.portraitW + 'px');
+    setVar('--tf-portrait-h',            cfg.portraitH + 'px');
+    setVar('--tf-gossamer-blur',          cfg.gossamerBlur + 'px');
+    setVar('--tf-gossamer-opacity',       (cfg.gossamerOpacity / 100).toFixed(2));
+    setVar('--tf-gossamer-feather',       cfg.gossamerFeather + 'px');
+    setVar('--tf-fade-start',             cfg.fadeStart + '%');
+    setVar('--tf-fade-reach',             cfg.fadeReach + '%');
+    setVar('--tf-fade-floor',             (cfg.fadeFloor / 100).toFixed(2));
+    setVar('--tf-pulse-speed',            parseFloat(cfg.pulseSpeed).toFixed(1) + 's');
+    setVar('--tf-pulse-intensity',        (cfg.pulseIntensity / 100).toFixed(2));
+    setVar('--tf-pulse-radius',           cfg.pulseRadius + 'px');
+    setVar('--tf-pulse-r',                cfg.pulseR);
+    setVar('--tf-pulse-g',                cfg.pulseG);
+    setVar('--tf-pulse-b',                cfg.pulseB);
+    setVar('--tf-ebb-opacity',            (cfg.ebbOpacity / 100).toFixed(2));
+    setVar('--tf-ebb-desaturate',         cfg.ebbDesaturate + '%');
+    /* Pre-computed saturate value: 0 desat = saturate(1), 100 desat = saturate(0) */
+    setVar('--tf-ebb-saturate',           (1 - cfg.ebbDesaturate / 100).toFixed(2));
+    setVar('--tf-flow-scale',             (cfg.flowScale / 100).toFixed(2));
+    setVar('--tf-flow-vibrancy',          (cfg.flowVibrancy / 100).toFixed(2));
+    setVar('--tf-void-lh',                (cfg.voidLineHeight / 100).toFixed(2));
+    setVar('--tf-void-ls',                (cfg.voidLetterSpacing / 100).toFixed(2) + 'em');
+    setVar('--tf-loom-radius',            cfg.loomRadius + 'px');
+    setVar('--tf-loom-vignette',          (cfg.loomVignette / 100).toFixed(2));
+    setVar('--tf-loom-vignette-spread',   cfg.loomVignetteSpread + '%');
+  }
+
+  /* ── Style ── */
+  function applyStyle(style) {
+    const chat = document.getElementById('chat');
+    if (chat) chat.setAttribute('data-tf-style', style);
+    cfg.style = style;
+  }
+
+  /* ── Theme (delegates to tfApplyTheme from trinfinity-themes.js) ── */
+  function applyTheme(themeKey) {
+    if (typeof tfApplyTheme === 'function') {
+      tfApplyTheme(themeKey, cfg, setVar);
+    } else {
+      /* Fallback: just set the attribute */
+      document.documentElement.setAttribute('data-tf-theme', themeKey);
+      cfg.theme = themeKey;
+    }
+  }
+
+  /* ── Font (delegates to tfApplyFont from trinfinity-fonts.js) ── */
+  function applyFont(pairKey) {
+    if (typeof tfApplyFont === 'function') {
+      tfApplyFont(pairKey, cfg, setVar);
+    } else {
+      document.documentElement.setAttribute('data-tf-font', pairKey);
+      cfg.font = pairKey;
+    }
+  }
+
+  /* ── Load custom fonts ── */
+  function loadCustomFonts(c) {
+    if (typeof tfLoadGoogleFont === 'function') {
+      if (c.customDisplayFont) {
+        tfLoadGoogleFont(c.customDisplayFont);
+        setVar('--tf-font-display', `'${c.customDisplayFont}', serif`);
+      }
+      if (c.customBodyFont) {
+        tfLoadGoogleFont(c.customBodyFont);
+        setVar('--tf-font-body', `'${c.customBodyFont}', sans-serif`);
+      }
+    }
+  }
+
+  /* ── Render sliders (delegates to tfRenderSliders) ── */
+  function renderSliders(style) {
+    const container = document.getElementById('tf-style-sliders');
+    if (typeof tfRenderSliders === 'function') {
+      tfRenderSliders(style, cfg, setVar, container, saveSettings);
+    }
+  }
+
+  /* ── Avatar refresh ── */
+  function refreshPortraits() {
+    if (typeof tfRefreshPortraits === 'function') {
+      tfRefreshPortraits(cfg);
+    }
+  }
+
+  /* ── Panel toggle ── */
+  function togglePanel() {
+    if (typeof tfTogglePanel === 'function') {
+      tfTogglePanel(cfg);
+    }
+  }
+
+  /* ── Build the floating button ── */
+  function buildButton() {
+    if (typeof tfBuildButton === 'function') {
+      tfBuildButton(cfg, togglePanel);
+    }
+  }
+
+  /* ── Build the settings panel ── */
+  function buildPanel() {
+    if (typeof tfBuildPanel === 'function') {
+      tfBuildPanel(cfg, {
+        TF_VERSION,
+        TF_STYLES,
+        TF_THEME_DATA:  (typeof TF_THEME_DATA  !== 'undefined') ? TF_THEME_DATA  : {},
+        TF_FONT_PAIRS:  (typeof TF_FONT_PAIRS  !== 'undefined') ? TF_FONT_PAIRS  : {},
+        applyTheme,
+        applyStyle,
+        applyFont,
+        setVar,
+        renderSliders,
+        loadCustomFonts,
+        saveSettings,
+        refreshPortraits,
+      });
+    }
+  }
+
+  /* ── Add to ST Extensions menu ── */
+  function addExtensionMenuEntry() {
+    if (typeof tfAddExtensionMenuEntry === 'function') {
+      tfAddExtensionMenuEntry(togglePanel);
+    }
+  }
+
+  /* ── Inline-load all src/ modules then initialise ──
+     ST extensions load as a single JS file, so we inline
+     the module contents via script tags here. */
+  function loadModules(callbacks) {
+    const modules = [
+      'src/trinfinity-themes.js',
+      'src/trinfinity-fonts.js',
+      'src/trinfinity-avatar.js',
+      'src/trinfinity-sliders.js',
+      'src/trinfinity-panel.js',
+    ];
+
+    let loaded = 0;
+    modules.forEach(src => {
+      const script = document.createElement('script');
+      /* Resolve relative to this extension's folder */
+      const base = (document.currentScript && document.currentScript.src)
+        ? document.currentScript.src.replace(/[^/]+$/, '')
+        : '/scripts/extensions/third-party/trinfinity/';
+      script.src = base + src;
+      script.onload  = () => { loaded++; if (loaded === modules.length) callbacks(); };
+      script.onerror = () => { loaded++; if (loaded === modules.length) callbacks(); };
+      document.head.appendChild(script);
+    });
+  }
+
+  /* ── Main init ── */
+  function init() {
+    loadSettings();
+    applyAllVars();
+
+    loadModules(() => {
+      /* Apply theme + font now modules are ready */
+      applyTheme(cfg.theme);
+      applyFont(cfg.font);
+      loadCustomFonts(cfg);
+
+      const ready = () => {
+        applyStyle(cfg.style);
+        buildButton();
+        buildPanel();
+        addExtensionMenuEntry();
+
+        /* Avatar enhancement — slight delay to let ST render chat */
+        setTimeout(() => {
+          if (typeof tfStartAvatarObserver === 'function') {
+            tfStartAvatarObserver(cfg);
+          }
+        }, 900);
+      };
+
+      if (document.body) {
+        ready();
+      } else {
+        document.addEventListener('DOMContentLoaded', ready);
+      }
+    });
+  }
+
+  init();
+
+})();

@@ -4,10 +4,32 @@
    Reads data-avatar-original from each .mes element
    Injects full portrait with stats overlay
    Watches for new messages via MutationObserver
+
+   v0.3.1 — sidebar stack: shows current + 2 previous portraits
    ============================================================ */
 
 const tf_enhanced = new WeakSet();
 let tf_avatarObserver = null;
+
+/* ── Build a single portrait div (no stats overlay on ghost copies) ── */
+function tfMakePortrait(avatarUrl, w, h, isMain) {
+  const portrait = document.createElement('div');
+  portrait.className = isMain ? 'tf-portrait' : 'tf-portrait tf-portrait-ghost';
+
+  const img = document.createElement('img');
+  img.className   = 'tf-portrait-img';
+  img.src         = avatarUrl;
+  img.alt         = '';
+  img.draggable   = false;
+  img.style.minHeight = h + 'px';
+
+  img.onerror = function() {
+    portrait.style.display = 'none';
+  };
+
+  portrait.appendChild(img);
+  return portrait;
+}
 
 function tfEnhanceMessage(mes, cfg) {
   if (tf_enhanced.has(mes)) return;
@@ -26,35 +48,18 @@ function tfEnhanceMessage(mes, cfg) {
   tf_enhanced.add(mes);
 
   /* Pull existing stat elements */
-  const mesId  = wrapper.querySelector('.mesIDDisplay');
-  const timer  = wrapper.querySelector('.mes_timer');
-  const tokens = wrapper.querySelector('.tokenCounterDisplay');
+  const mesId    = wrapper.querySelector('.mesIDDisplay');
+  const timer    = wrapper.querySelector('.mes_timer');
+  const tokens   = wrapper.querySelector('.tokenCounterDisplay');
   const oldThumb = wrapper.querySelector('.avatar');
 
   const w = cfg.portraitW || 120;
   const h = cfg.portraitH || 160;
 
-  /* Portrait container */
-  const portrait = document.createElement('div');
-  portrait.className = 'tf-portrait';
+  /* ── Main portrait (current message) ── */
+  const portrait = tfMakePortrait(avatarUrl, w, h, true);
 
-  /* Portrait image */
-  const img = document.createElement('img');
-  img.className   = 'tf-portrait-img';
-  img.src         = avatarUrl;
-  img.alt         = '';
-  img.draggable   = false;
-  img.style.minHeight = h + 'px';
-
-  /* Error fallback — use thumbnail if original fails */
-  img.onerror = function() {
-    const fallback = mes.dataset.avatarThumb || mes.dataset.avatar || '';
-    if (fallback && fallback !== avatarUrl) {
-      img.src = fallback;
-    }
-  };
-
-  /* Stats overlay */
+  /* Stats overlay — only on main portrait */
   const stats = document.createElement('div');
   stats.className = 'tf-portrait-stats';
 
@@ -62,14 +67,42 @@ function tfEnhanceMessage(mes, cfg) {
   if (timer)  { timer.className  += ' tf-stat'; stats.appendChild(timer); }
   if (tokens) { tokens.className += ' tf-stat'; stats.appendChild(tokens); }
 
-  portrait.appendChild(img);
   portrait.appendChild(stats);
 
   /* Replace old thumbnail */
   if (oldThumb) oldThumb.remove();
 
   wrapper.classList.add('tf-avatar-wrapper');
-  wrapper.prepend(portrait);
+  wrapper.innerHTML = '';  /* clear before inserting */
+  wrapper.appendChild(portrait);
+
+  /* ── Ghost portraits: find previous 2 messages with different avatar ── */
+  const isUser = mes.getAttribute('is_user') === 'true';
+  const allMes = Array.from(document.querySelectorAll('#chat .mes'));
+  const idx = allMes.indexOf(mes);
+
+  const ghosts = [];
+  for (let i = idx - 1; i >= 0 && ghosts.length < 2; i--) {
+    const prev = allMes[i];
+    /* Only stack same side (char vs user) */
+    const prevIsUser = prev.getAttribute('is_user') === 'true';
+    if (prevIsUser !== isUser) continue;
+
+    const prevUrl =
+      prev.dataset.avatarOriginal ||
+      prev.dataset.avatarThumb    ||
+      prev.dataset.avatar         ||
+      '';
+    if (!prevUrl) continue;
+
+    ghosts.push(prevUrl);
+  }
+
+  /* Append ghost portraits below the main one (older = further down) */
+  ghosts.forEach(url => {
+    const ghost = tfMakePortrait(url, w, h, false);
+    wrapper.appendChild(ghost);
+  });
 }
 
 function tfEnhanceAllMessages(cfg) {
@@ -83,10 +116,8 @@ function tfStartAvatarObserver(cfg) {
     return;
   }
 
-  /* Enhance existing */
   tfEnhanceAllMessages(cfg);
 
-  /* Stop any existing observer */
   if (tf_avatarObserver) tf_avatarObserver.disconnect();
 
   tf_avatarObserver = new MutationObserver((mutations) => {
@@ -99,7 +130,6 @@ function tfStartAvatarObserver(cfg) {
           node.querySelectorAll?.('.mes').forEach(m => tfEnhanceMessage(m, cfg));
         }
       });
-      /* Re-enhance if avatar URL changes */
       if (
         mutation.type === 'attributes' &&
         mutation.target.classList?.contains('mes')
@@ -118,13 +148,10 @@ function tfStartAvatarObserver(cfg) {
   });
 }
 
-/* Re-run enhancement when portrait size changes */
 function tfRefreshPortraits(cfg) {
-  /* Remove all existing portraits and re-inject */
   document.querySelectorAll('.tf-portrait').forEach(p => {
     const wrapper = p.closest('.mesAvatarWrapper');
     if (!wrapper) return;
-    /* Restore old avatar div */
     const oldAvatar = document.createElement('div');
     oldAvatar.className = 'avatar';
     const img = document.createElement('img');

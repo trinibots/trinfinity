@@ -13,6 +13,33 @@ x.y.z
 
 ---
 
+## v0.3.1 — Stage 3, Save 1: Style Fixes + Portrait Stack
+**Files:** src/trinfinity-avatar.js · styles/trinfinity-avatar.css · trinfinity-panel.js
+
+### Added
+- **Sidebar portrait stack** — each message now shows the current portrait plus up to 2 previous
+  same-side portraits stacked below, ghost-faded (38% / 18% opacity, desaturated)
+  - `.tf-portrait-ghost` class for previous portraits
+  - Second ghost further faded with adjacent sibling selector
+
+### Fixed
+- **Gossamer** — portrait no longer uses feather mask (which bled into text area);
+  replaced with a `::after` corner vignette overlay on the portrait container
+- **Pulse** — portrait image was inheriting `animation: tf-pulse-breathe` from the portrait
+  container rule, causing the whole image to fade in/out; set `animation: none` on
+  `.tf-portrait` for Pulse — breathe animation remains on the `::before` bar only
+- **Ebb** — desaturate slider had no effect; root cause was `--tf-ebb-desaturate` being
+  set as `60%` (with unit) and used inside `saturate(calc(1 - var / 100))` which is
+  invalid CSS. Fixed by computing `--tf-ebb-saturate` as a clean decimal in JS
+  (`applyAllVars`) and using that directly in `filter: saturate(var(--tf-ebb-saturate))`
+
+### Changed
+- `applyAllVars()` now sets `--tf-ebb-saturate` (pre-computed `1 - ebbDesaturate/100`)
+  in addition to `--tf-ebb-desaturate` (kept for reference)
+- `.mesAvatarWrapper` gains `gap: 4px` to space portrait stack
+
+---
+
 ## v0.3.0 — Stage 3: Full Architecture Rebuild
 **Files:** All files restructured and expanded
 
