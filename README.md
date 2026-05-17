@@ -106,12 +106,12 @@ trinfinity/
 
 - SillyTavern 1.17.0+ (Release or Staging)
 - Brave / Chrome recommended
-- Does not require Moonlit Echoes — fully standalone
+- Does not require other UI interfaces — fully standalone
 
 ## License
 
-MIT — do whatever you want with it, just credit trinity (trinachronism).
+MIT — do whatever you want with it, just credit trinity (trinachronism on Discord).
 
 ---
 
-*Built with coffee and Claude.*
+*built with caffeine, neurospicy inspiration and AI assistance.*
