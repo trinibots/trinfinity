@@ -1,10 +1,16 @@
 {
-  "name": "[Trinfinity] Lacuna",
-  "trinfinity_theme": "lacuna",
-  "description": "Trinfinity theme preset: Lacuna",
+  "display_name": "Trinfinity",
+  "version": "0.3.0",
+  "description": "A sensory UI theme system for SillyTavern. Seven message styles, twelve colour themes, custom fonts, real-time controls. Built by trinity (trinachronism).",
   "author": "trinity (trinachronism)",
-  "bg_color": "#060608",
-  "accent_color": "#1a3a4a",
-  "accent_soft": "#4ab8d4",
-  "text_color": "#d8eef5"
+  "homePage": "https://github.com/trinibots/trinfinity",
+  "requires": [],
+  "optional": [],
+  "js": "trinfinity-core.js",
+  "css": "trinfinity-styles.css",
+  "author_note": "Trinfinity is an original theme system. All style names, concepts, and implementations are original works.",
+  "content_security_policy": {
+    "script-src": "self cdnjs.cloudflare.com fonts.googleapis.com fonts.gstatic.com",
+    "style-src": "self fonts.googleapis.com fonts.gstatic.com"
+  }
 }
