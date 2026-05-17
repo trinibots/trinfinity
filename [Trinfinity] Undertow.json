@@ -1,0 +1,10 @@
+{
+  "name": "[Trinfinity] Ashen",
+  "trinfinity_theme": "ashen",
+  "description": "Trinfinity theme preset: Ashen",
+  "author": "trinity (trinachronism)",
+  "bg_color": "#080808",
+  "accent_color": "#6b6b6b",
+  "accent_soft": "#c0bdb8",
+  "text_color": "#e0ddd8"
+}

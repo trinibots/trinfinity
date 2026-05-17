@@ -1,0 +1,10 @@
+{
+  "name": "[Trinfinity] Revenant",
+  "trinfinity_theme": "revenant",
+  "description": "Trinfinity theme preset: Revenant",
+  "author": "trinity (trinachronism)",
+  "bg_color": "#050508",
+  "accent_color": "#2a3a6b",
+  "accent_soft": "#6b82d4",
+  "text_color": "#dce4f8"
+}

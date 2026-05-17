@@ -1,0 +1,10 @@
+{
+  "name": "[Trinfinity] Venom",
+  "trinfinity_theme": "venom",
+  "description": "Trinfinity theme preset: Venom",
+  "author": "trinity (trinachronism)",
+  "bg_color": "#040a04",
+  "accent_color": "#2a6b1a",
+  "accent_soft": "#6bd44a",
+  "text_color": "#d8f0d0"
+}

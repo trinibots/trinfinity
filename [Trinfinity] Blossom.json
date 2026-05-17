@@ -1,0 +1,42 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-fade.css
+   Fade: architectural softness · portrait dissolves into strip
+   Fader controls start, reach, floor opacity
+   ============================================================ */
+
+[data-tf-style="fade"] .mes {
+  display: flex !important;
+  align-items: stretch !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 2px !important;
+  margin-bottom: 1px !important;
+}
+
+[data-tf-style="fade"] .mes[is_user="false"] {
+  background: var(--tf-bg-surface) !important;
+  border-left: 2px solid var(--tf-accent) !important;
+  min-height: 80px !important;
+}
+
+[data-tf-style="fade"] .mes[is_user="true"] {
+  background: var(--tf-bg-user) !important;
+  border-right: 2px solid var(--tf-accent-border) !important;
+  border-left: none !important;
+  flex-direction: row-reverse !important;
+  min-height: 80px !important;
+}
+
+[data-tf-style="fade"] .mesAvatarWrapper {
+  position: relative !important;
+  z-index: 1 !important;
+  flex-shrink: 0 !important;
+  align-self: stretch !important;
+}
+
+[data-tf-style="fade"] .mes_block {
+  background: transparent !important;
+  border: none !important;
+  padding: 12px 16px !important;
+  flex: 1 !important;
+}

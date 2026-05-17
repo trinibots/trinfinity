@@ -1,0 +1,31 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-ebb.css
+   Ebb: portrait recedes · desaturated · fading like memory
+   ============================================================ */
+
+[data-tf-style="ebb"] .mes {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+  padding: 14px 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--tf-accent-border-sub) !important;
+}
+
+[data-tf-style="ebb"] .mes[is_user="true"] {
+  flex-direction: row-reverse !important;
+}
+
+[data-tf-style="ebb"] .mes_block {
+  background: transparent !important;
+  border: none !important;
+  border-left: 1px solid var(--tf-accent-border-mid) !important;
+  padding: 4px 14px !important;
+  flex: 1 !important;
+}
+
+[data-tf-style="ebb"] .mes[is_user="true"] .mes_block {
+  border-left: none !important;
+  border-right: 1px solid var(--tf-accent-border-mid) !important;
+}

@@ -1,0 +1,42 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-void.css
+   Void: no borders · intentional negative space
+   Hidden structure in the spaces between breaths
+   ============================================================ */
+
+[data-tf-style="void"] .mes {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+[data-tf-style="void"] .mes_block {
+  background: transparent !important;
+  border: none !important;
+  padding: 20px 24px !important;
+}
+
+[data-tf-style="void"] .mes_text {
+  line-height: var(--tf-void-lh) !important;
+}
+
+[data-tf-style="void"] .name_text {
+  letter-spacing: var(--tf-void-ls) !important;
+  margin-bottom: 10px !important;
+  display: block !important;
+}
+
+/* Only the faintest structural hint — barely there */
+[data-tf-style="void"] .mes[is_user="false"] .mes_block {
+  border-bottom: 1px solid var(--tf-accent-border-sub) !important;
+}
+
+[data-tf-style="void"] .mes[is_user="true"] .mes_block {
+  border-bottom: 1px solid rgba(139,92,246,0.05) !important;
+}
+
+/* Avatar sits small and clean */
+[data-tf-style="void"] .mesAvatarWrapper {
+  padding-top: 20px !important;
+}

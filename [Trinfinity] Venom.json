@@ -1,0 +1,10 @@
+{
+  "name": "[Trinfinity] Requiem",
+  "trinfinity_theme": "requiem",
+  "description": "Trinfinity theme preset: Requiem",
+  "author": "trinity (trinachronism)",
+  "bg_color": "#060408",
+  "accent_color": "#4a1a5c",
+  "accent_soft": "#9b4dca",
+  "text_color": "#ecddf5"
+}

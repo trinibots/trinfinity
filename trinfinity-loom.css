@@ -1,0 +1,77 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-pulse.css
+   Pulse: flatline accent bar · breathing glow animation
+   Speed, intensity, radius, RGB all slider-controlled
+   ============================================================ */
+
+@keyframes tf-pulse-breathe {
+  0%   {
+    opacity: 0.15;
+    box-shadow: 0 0 2px 0
+      rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.2);
+  }
+  50%  {
+    opacity: var(--tf-pulse-intensity);
+    box-shadow:
+      0 0 var(--tf-pulse-radius)
+      calc(var(--tf-pulse-radius) * 0.6)
+      rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),
+      calc(var(--tf-pulse-intensity) * 0.6));
+  }
+  100% {
+    opacity: 0.15;
+    box-shadow: 0 0 2px 0
+      rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.2);
+  }
+}
+
+[data-tf-style="pulse"] .mes[is_user="false"] {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 12px 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+[data-tf-style="pulse"] .mes[is_user="true"] {
+  display: flex !important;
+  align-items: flex-start !important;
+  flex-direction: row-reverse !important;
+  gap: 12px !important;
+  padding: 12px 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+[data-tf-style="pulse"] .mes_block {
+  background: transparent !important;
+  border: none !important;
+  position: relative !important;
+  padding: 4px 14px !important;
+}
+
+/* The flatline — static bar that breathes */
+[data-tf-style="pulse"] .mes[is_user="false"] .mes_block::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 8% !important;
+  bottom: 8% !important;
+  width: 1px !important;
+  background: rgba(
+    var(--tf-pulse-r),
+    var(--tf-pulse-g),
+    var(--tf-pulse-b),
+    0.55
+  ) !important;
+  animation: tf-pulse-breathe var(--tf-pulse-speed) ease-in-out infinite !important;
+}
+
+/* User message — mirrored bar on the right */
+[data-tf-style="pulse"] .mes[is_user="true"] .mes_block {
+  border-right: 1px solid
+    rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.30) !important;
+  border-left: none !important;
+  animation: tf-pulse-breathe var(--tf-pulse-speed) ease-in-out infinite !important;
+}

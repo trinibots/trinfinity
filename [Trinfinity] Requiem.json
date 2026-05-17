@@ -1,0 +1,352 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-base.css
+   CSS custom properties · Global base · Font loading
+   Inline colour fix · Form elements · Scrollbars
+   ============================================================ */
+
+/* ── Cinzel (Pair A display) ── */
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/cinzel/v23/8vIJ7ww63mVu7gtL-SfCn4E.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/cinzel/v23/8vIJ7ww63mVu7gtL-SfCn4E.woff2') format('woff2');
+}
+
+/* ── IM Fell English (Pair D display) ── */
+@font-face {
+  font-family: 'IM Fell English';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/imfellenglish/v16/Ktk1ALSLW8zDe0rthJysWrnLsAz3F6mZVY9Y5w.woff2') format('woff2');
+}
+
+/* ── CSS Custom Properties ── */
+:root {
+  /* Theme colours — defaults to Ultraviolet */
+  --tf-bg-deep:           #0d0b10;
+  --tf-bg-mid:            #120e1c;
+  --tf-bg-surface:        rgba(18,12,36,0.72);
+  --tf-bg-user:           rgba(42,31,74,0.72);
+  --tf-accent:            #8b5cf6;
+  --tf-accent-soft:       #a78bfa;
+  --tf-accent-glow:       rgba(139,92,246,0.35);
+  --tf-accent-border:     rgba(139,92,246,0.28);
+  --tf-accent-border-mid: rgba(139,92,246,0.18);
+  --tf-accent-border-sub: rgba(139,92,246,0.10);
+  --tf-text:              #e8e2f5;
+  --tf-text-muted:        #7c7398;
+  --tf-text-em:           #a78bfa;
+  --tf-name-char:         #8b5cf6;
+  --tf-name-user:         rgba(184,176,208,0.65);
+  --tf-scrollbar:         #3d3560;
+  --tf-input-bg:          rgba(16,14,26,0.90);
+  --tf-topbar:            rgba(13,11,16,0.92);
+  --tf-sidebar:           rgba(18,16,26,0.95);
+  --tf-select-bg:         rgba(34,31,51,0.95);
+  --tf-button:            rgba(109,40,217,0.50);
+
+  /* Font system */
+  --tf-font-display:      'Cinzel', serif;
+  --tf-font-body:         'Calibri', sans-serif;
+  --tf-font-display-size: 11px;
+  --tf-font-display-ls:   0.14em;
+
+  /* Portrait */
+  --tf-portrait-w:        120px;
+  --tf-portrait-h:        160px;
+
+  /* Gossamer */
+  --tf-gossamer-blur:     10px;
+  --tf-gossamer-opacity:  0.72;
+  --tf-gossamer-feather:  32px;
+
+  /* Fade */
+  --tf-fade-start:        40%;
+  --tf-fade-reach:        70%;
+  --tf-fade-floor:        0.08;
+
+  /* Pulse */
+  --tf-pulse-speed:       2.4s;
+  --tf-pulse-intensity:   0.70;
+  --tf-pulse-radius:      8px;
+  --tf-pulse-r:           139;
+  --tf-pulse-g:           92;
+  --tf-pulse-b:           246;
+
+  /* Ebb */
+  --tf-ebb-opacity:       0.45;
+  --tf-ebb-desaturate:    60%;
+
+  /* Flow */
+  --tf-flow-scale:        1.06;
+  --tf-flow-vibrancy:     1.15;
+
+  /* Void */
+  --tf-void-lh:           1.95;
+  --tf-void-ls:           0.13em;
+
+  /* Loom */
+  --tf-loom-radius:       3px;
+  --tf-loom-vignette:     0.55;
+  --tf-loom-vignette-spread: 60%;
+}
+
+/* ── Global Base ── */
+body {
+  background-color: var(--tf-bg-deep) !important;
+  color: var(--tf-text) !important;
+  font-family: var(--tf-font-body) !important;
+}
+
+html, html body {
+  font-family: var(--tf-font-body) !important;
+  font-weight: 400 !important;
+}
+
+h1, h2, h3, h4,
+.title_restorable,
+.standoutHeader,
+.name_text,
+#rm_button_selected_ch h2,
+.inline-drawer-header b,
+.popup .popup-title {
+  font-family: var(--tf-font-display) !important;
+  font-weight: 500 !important;
+  letter-spacing: var(--tf-font-display-ls) !important;
+}
+
+/* ── Top bar ── */
+#top-bar {
+  background: var(--tf-topbar) !important;
+  border-bottom: 1px solid var(--tf-accent-border-mid) !important;
+}
+
+/* ── Chat area ── */
+#chat {
+  background: transparent !important;
+  scrollbar-color: var(--tf-scrollbar) transparent;
+}
+
+#chat::-webkit-scrollbar       { width: 4px; }
+#chat::-webkit-scrollbar-thumb { background: var(--tf-scrollbar); border-radius: 2px; }
+#chat::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Message text ──
+   CRITICAL: color has no !important so inline <font color=""> tags
+   and span[style] colours from presets like Max can show through. */
+.mes_text {
+  font-family: var(--tf-font-body) !important;
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+  color: var(--tf-text);
+}
+
+/* Allow inline colour tags through */
+.mes_text font,
+.mes_text font[color]         { color: unset !important; }
+.mes_text font span,
+.mes_text font[color] span    { color: inherit !important; }
+.mes_text span[style*="color"]   { color: unset !important; }
+.mes_text span[style*="color"] * { color: inherit !important; }
+
+/* Italic / action text */
+.mes_text em,
+.mes_text i {
+  color: var(--tf-text-em) !important;
+  font-style: italic !important;
+}
+
+/* Blockquotes */
+.mes_text blockquote {
+  color: var(--tf-text) !important;
+  border-left: 2px solid var(--tf-accent) !important;
+  padding-left: 10px !important;
+  margin-left: 4px !important;
+}
+
+/* ── Character name ── */
+.name_text {
+  font-family: var(--tf-font-display) !important;
+  font-weight: 500 !important;
+  font-size: var(--tf-font-display-size) !important;
+  letter-spacing: var(--tf-font-display-ls) !important;
+  text-transform: uppercase !important;
+}
+
+#chat .mes[is_user="false"] .name_text { color: var(--tf-name-char) !important; }
+#chat .mes[is_user="true"]  .name_text { color: var(--tf-name-user) !important; }
+
+/* ── Timestamp ── */
+.mes_date {
+  font-size: 10px !important;
+  color: var(--tf-text-muted) !important;
+}
+
+/* ── Swipe buttons ── */
+.swipe_left, .swipe_right {
+  color: var(--tf-accent-soft) !important;
+  opacity: 0.5 !important;
+  transition: opacity 0.2s !important;
+}
+.swipe_left:hover, .swipe_right:hover {
+  opacity: 1 !important;
+  color: var(--tf-accent) !important;
+}
+
+/* ── Message action buttons ── */
+.mes_buttons .mes_button {
+  color: var(--tf-text-muted) !important;
+  transition: color 0.15s !important;
+}
+.mes_buttons .mes_button:hover { color: var(--tf-accent-soft) !important; }
+
+/* ── Input bar ── */
+#send_form {
+  background: rgba(18,16,26,0.90) !important;
+  border-top: 1px solid var(--tf-accent-border-mid) !important;
+}
+
+#send_textarea {
+  background: var(--tf-input-bg) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: 6px !important;
+  color: var(--tf-text) !important;
+  font-family: var(--tf-font-body) !important;
+  font-size: 14px !important;
+  caret-color: var(--tf-accent-soft) !important;
+}
+
+#send_textarea::placeholder {
+  color: var(--tf-text-muted) !important;
+  font-style: italic !important;
+}
+
+#send_textarea:focus {
+  border-color: var(--tf-accent) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px var(--tf-accent-glow) !important;
+}
+
+#send_but { color: var(--tf-accent) !important; }
+#send_form:focus-within #send_but { color: var(--tf-accent-soft) !important; }
+
+/* ── Sidebars ── */
+#left-nav-panel,
+#right-nav-panel {
+  background: var(--tf-sidebar) !important;
+  border-color: var(--tf-accent-border-mid) !important;
+}
+
+.character_select,
+.group_select {
+  border-bottom: 1px solid var(--tf-accent-border-sub) !important;
+  transition: background 0.15s !important;
+}
+
+.character_select:hover,
+.group_select:hover   { background: rgba(34,31,51,0.80) !important; }
+
+.character_select.selected_character,
+.group_select.selected_group {
+  background: rgba(139,92,246,0.12) !important;
+  border-left: 2px solid var(--tf-accent) !important;
+}
+
+.inline-drawer-header {
+  border-bottom: 1px solid var(--tf-accent-border-mid) !important;
+}
+
+/* ── Popups ── */
+.popup, .dialogue_popup {
+  background: rgba(26,23,38,0.98) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: 10px !important;
+  color: var(--tf-text) !important;
+}
+
+.popup_header,
+.dialogue_popup h2,
+.dialogue_popup h3 {
+  font-family: var(--tf-font-display) !important;
+  font-weight: 500 !important;
+  color: var(--tf-accent-soft) !important;
+  border-bottom: 1px solid var(--tf-accent-border-mid) !important;
+}
+
+/* ── World info ── */
+.world_entry {
+  background: rgba(26,23,38,0.80) !important;
+  border: 1px solid var(--tf-accent-border-mid) !important;
+  border-radius: 6px !important;
+}
+
+/* ── Form inputs ── */
+input[type="text"],
+input[type="number"],
+input[type="search"],
+input[type="password"],
+input[type="email"],
+textarea, select {
+  background: var(--tf-input-bg) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: 6px !important;
+  color: var(--tf-text) !important;
+  font-family: var(--tf-font-body) !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--tf-accent) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px var(--tf-accent-glow) !important;
+}
+
+input[type="range"] { accent-color: var(--tf-accent) !important; }
+
+/* ── Tags ── */
+.tag {
+  background: var(--tf-accent-glow) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  color: var(--tf-accent-soft) !important;
+  font-size: 11px !important;
+  border-radius: 4px !important;
+}
+
+/* ── Select2 ── */
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+  background: var(--tf-input-bg) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  color: var(--tf-text) !important;
+}
+
+.select2-container--default .select2-results__option--highlighted {
+  background: var(--tf-accent) !important;
+  color: var(--tf-text) !important;
+}
+
+.select2-dropdown {
+  background: var(--tf-sidebar) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+}
+
+/* ── Scrollbars global ── */
+* { scrollbar-color: var(--tf-scrollbar) transparent; scrollbar-width: thin; }
+*::-webkit-scrollbar       { width: 4px; height: 4px; }
+*::-webkit-scrollbar-thumb { background: var(--tf-scrollbar); border-radius: 2px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Links ── */
+a, a:visited { color: var(--tf-accent-soft) !important; text-decoration: none !important; }
+a:hover      { color: var(--tf-accent) !important; text-decoration: underline !important; }
+
+/* ── HR ── */
+hr { border-color: var(--tf-accent-border-mid) !important; }

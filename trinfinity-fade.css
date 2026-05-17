@@ -1,0 +1,266 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-panel.css
+   Floating lemniscate button + settings panel
+   ============================================================ */
+
+/* ── Floating button ── */
+#trinfinity-btn {
+  position: fixed !important;
+  z-index: 9999 !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  background: var(--tf-bg-mid) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  cursor: grab !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0.28 !important;
+  transition: opacity 0.35s ease, box-shadow 0.35s ease, border-color 0.3s !important;
+  user-select: none !important;
+}
+
+#trinfinity-btn:hover {
+  opacity: 1 !important;
+  border-color: var(--tf-accent) !important;
+  box-shadow:
+    0 0 0 1px var(--tf-accent-glow),
+    0 0 16px var(--tf-accent-glow) !important;
+}
+
+#trinfinity-btn:active { cursor: grabbing !important; }
+
+.tf-btn-svg {
+  width: 28px !important;
+  height: 28px !important;
+  stroke: var(--tf-accent-soft) !important;
+  fill: none !important;
+  stroke-width: 1.4 !important;
+  color: var(--tf-accent-soft) !important;
+  transition: stroke 0.3s !important;
+  overflow: visible !important;
+}
+
+#trinfinity-btn:hover .tf-btn-svg {
+  stroke: var(--tf-accent-soft) !important;
+  filter: drop-shadow(0 0 4px var(--tf-accent-glow)) !important;
+}
+
+/* ── Settings panel ── */
+#trinfinity-panel {
+  position: fixed !important;
+  z-index: 9998 !important;
+  width: 320px !important;
+  max-height: 82vh !important;
+  overflow-y: auto !important;
+  background: var(--tf-sidebar) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.65) !important;
+  display: none !important;
+  flex-direction: column !important;
+  font-family: var(--tf-font-body) !important;
+  color: var(--tf-text) !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--tf-scrollbar) transparent !important;
+}
+
+#trinfinity-panel.tf-open {
+  display: flex !important;
+}
+
+/* ── Panel header ── */
+.tf-panel-header {
+  padding: 14px 18px 10px !important;
+  border-bottom: 1px solid var(--tf-accent-border-mid) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: sticky !important;
+  top: 0 !important;
+  background: var(--tf-sidebar) !important;
+  z-index: 1 !important;
+}
+
+.tf-panel-title {
+  font-family: var(--tf-font-display) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.20em !important;
+  text-transform: uppercase !important;
+  color: var(--tf-accent-soft) !important;
+}
+
+.tf-panel-close {
+  background: none !important;
+  border: none !important;
+  color: var(--tf-text-muted) !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  transition: color 0.2s, background 0.2s !important;
+}
+
+.tf-panel-close:hover {
+  color: var(--tf-accent-soft) !important;
+  background: var(--tf-accent-border-mid) !important;
+}
+
+/* ── Panel body ── */
+.tf-panel-body {
+  padding: 14px 18px 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+/* ── Section label ── */
+.tf-section-label {
+  font-size: 9px !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: var(--tf-accent) !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+/* ── Panel section ── */
+.tf-panel-section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+/* ── Rows ── */
+.tf-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* ── Slider rows ── */
+.tf-slider-label {
+  font-size: 11px !important;
+  color: var(--tf-text-muted) !important;
+  min-width: 108px !important;
+}
+
+.tf-slider-val {
+  font-size: 10px !important;
+  color: var(--tf-accent-soft) !important;
+  min-width: 38px !important;
+  text-align: right !important;
+}
+
+.tf-slider {
+  flex: 1 !important;
+  accent-color: var(--tf-accent) !important;
+  height: 2px !important;
+}
+
+/* ── Selects ── */
+.tf-select {
+  width: 100% !important;
+  background: var(--tf-input-bg) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: 5px !important;
+  color: var(--tf-text) !important;
+  font-family: var(--tf-font-body) !important;
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+  cursor: pointer !important;
+  outline: none !important;
+}
+
+.tf-select:focus {
+  border-color: var(--tf-accent) !important;
+  box-shadow: 0 0 0 1px var(--tf-accent-glow) !important;
+}
+
+/* ── Inputs ── */
+.tf-input {
+  width: 100% !important;
+  background: var(--tf-input-bg) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: 5px !important;
+  color: var(--tf-text) !important;
+  font-family: var(--tf-font-body) !important;
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+  outline: none !important;
+}
+
+.tf-input:focus {
+  border-color: var(--tf-accent) !important;
+  box-shadow: 0 0 0 1px var(--tf-accent-glow) !important;
+}
+
+/* ── Small buttons ── */
+.tf-btn-small {
+  background: var(--tf-button) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: 5px !important;
+  color: var(--tf-accent-soft) !important;
+  font-family: var(--tf-font-body) !important;
+  font-size: 12px !important;
+  padding: 5px 12px !important;
+  cursor: pointer !important;
+  transition: background 0.2s, border-color 0.2s !important;
+  text-align: center !important;
+}
+
+.tf-btn-small:hover {
+  background: var(--tf-accent) !important;
+  border-color: var(--tf-accent-soft) !important;
+  color: #fff !important;
+}
+
+/* ── Custom font section ── */
+.tf-custom-fonts {
+  flex-direction: column !important;
+  gap: 6px !important;
+  margin-top: 6px !important;
+}
+
+/* ── Divider ── */
+.tf-divider {
+  border: none !important;
+  border-top: 1px solid var(--tf-accent-border-mid) !important;
+  margin: 2px 0 !important;
+}
+
+/* ── About section ── */
+.tf-about {
+  font-size: 10px !important;
+  color: var(--tf-text-muted) !important;
+  text-align: center !important;
+  letter-spacing: 0.06em !important;
+  gap: 3px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.tf-about a {
+  color: var(--tf-accent-soft) !important;
+  font-size: 10px !important;
+}
+
+/* ── Extension menu entry ── */
+.tf-ext-menu-btn {
+  cursor: pointer !important;
+  padding: 8px 16px !important;
+  color: var(--tf-accent-soft, #a78bfa) !important;
+  font-family: var(--tf-font-display, 'Cinzel', serif) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  border-bottom: 1px solid var(--tf-accent-border-mid, rgba(139,92,246,0.18)) !important;
+  transition: background 0.15s !important;
+}
+
+.tf-ext-menu-btn:hover {
+  background: var(--tf-accent-border-mid) !important;
+}

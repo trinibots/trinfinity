@@ -1,0 +1,198 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-avatar.css
+   Portrait injection system CSS
+   Per-style portrait treatments
+   ============================================================ */
+
+/* ── Base avatar wrapper ── */
+.mesAvatarWrapper {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+/* Hide the original small thumbnail once portrait is injected */
+.mesAvatarWrapper .avatar:not(.tf-portrait) {
+  display: none !important;
+}
+
+/* ── Portrait container ── */
+.tf-portrait {
+  position: relative !important;
+  width: var(--tf-portrait-w) !important;
+  min-height: var(--tf-portrait-h) !important;
+  flex-shrink: 0 !important;
+  overflow: hidden !important;
+  border-radius: 4px !important;
+  transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease !important;
+}
+
+/* ── Portrait image ── */
+.tf-portrait-img {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: var(--tf-portrait-h) !important;
+  object-fit: cover !important;
+  object-position: top center !important;
+  display: block !important;
+  transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease !important;
+}
+
+/* ── Stats overlay ── */
+.tf-portrait-stats {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 22px 6px 5px 6px !important;
+  background: linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 100%) !important;
+  pointer-events: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1px !important;
+}
+
+.tf-stat,
+.tf-portrait-stats .mesIDDisplay,
+.tf-portrait-stats .mes_timer,
+.tf-portrait-stats .tokenCounterDisplay {
+  font-size: 10px !important;
+  opacity: 0.68 !important;
+  color: rgba(255,255,255,0.80) !important;
+  display: block !important;
+  line-height: 1.4 !important;
+  font-family: 'Calibri', sans-serif !important;
+}
+
+/* ── User message portrait right-side ordering ── */
+.mes[is_user="true"] .mesAvatarWrapper { order: 2 !important; }
+.mes[is_user="true"] .mes_block        { order: 1 !important; }
+
+/* ── Base mes reset ── */
+.mes {
+  border: none !important;
+  background: transparent !important;
+}
+
+
+/* ============================================================
+   PER-STYLE PORTRAIT TREATMENTS
+   ============================================================ */
+
+/* ── GOSSAMER — radial feather dissolve ── */
+[data-tf-style="gossamer"] .tf-portrait-img {
+  mask-image: radial-gradient(
+    ellipse at center,
+    black 45%,
+    transparent calc(45% + var(--tf-gossamer-feather))
+  ) !important;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black 45%,
+    transparent calc(45% + var(--tf-gossamer-feather))
+  ) !important;
+}
+
+/* ── FADE — horizontal gradient dissolve into message ── */
+[data-tf-style="fade"] .tf-portrait {
+  border-radius: 0 !important;
+}
+
+[data-tf-style="fade"] .mes[is_user="false"] .tf-portrait-img {
+  mask-image: linear-gradient(
+    to right,
+    black var(--tf-fade-start),
+    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
+    transparent 100%
+  ) !important;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black var(--tf-fade-start),
+    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
+    transparent 100%
+  ) !important;
+}
+
+[data-tf-style="fade"] .mes[is_user="true"] .tf-portrait-img {
+  mask-image: linear-gradient(
+    to left,
+    black var(--tf-fade-start),
+    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
+    transparent 100%
+  ) !important;
+  -webkit-mask-image: linear-gradient(
+    to left,
+    black var(--tf-fade-start),
+    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
+    transparent 100%
+  ) !important;
+}
+
+/* ── PULSE — breathing glow border on portrait edge ── */
+[data-tf-style="pulse"] .tf-portrait {
+  border-radius: 0 !important;
+  border-left: 1px solid
+    rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.5) !important;
+  animation: tf-pulse-breathe var(--tf-pulse-speed) ease-in-out infinite !important;
+}
+
+[data-tf-style="pulse"] .mes[is_user="true"] .tf-portrait {
+  border-left: none !important;
+  border-right: 1px solid
+    rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.5) !important;
+}
+
+/* ── EBB — portrait recedes, desaturated, like a memory ── */
+[data-tf-style="ebb"] .tf-portrait-img {
+  opacity: var(--tf-ebb-opacity) !important;
+  filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 100)) !important;
+}
+
+[data-tf-style="ebb"] .mes:hover .tf-portrait-img {
+  opacity: calc(var(--tf-ebb-opacity) + 0.2) !important;
+  filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 150)) !important;
+}
+
+/* ── FLOW — portrait advances, full colour, scaled ── */
+[data-tf-style="flow"] .tf-portrait {
+  transform: scale(var(--tf-flow-scale)) !important;
+  transform-origin: bottom center !important;
+}
+
+[data-tf-style="flow"] .tf-portrait-img {
+  filter: saturate(var(--tf-flow-vibrancy)) !important;
+}
+
+/* ── VOID — small clean circle, stats hidden ── */
+[data-tf-style="void"] .tf-portrait {
+  width: 44px !important;
+  min-height: 44px !important;
+  border-radius: 50% !important;
+}
+
+[data-tf-style="void"] .tf-portrait-img {
+  min-height: 44px !important;
+}
+
+[data-tf-style="void"] .tf-portrait-stats {
+  display: none !important;
+}
+
+/* ── LOOM — precise rectangle, vignette overlay ── */
+[data-tf-style="loom"] .tf-portrait {
+  border-radius: var(--tf-loom-radius) !important;
+  border: 1px solid var(--tf-accent-border-mid) !important;
+}
+
+[data-tf-style="loom"] .tf-portrait::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: radial-gradient(
+    ellipse at center,
+    transparent var(--tf-loom-vignette-spread),
+    rgba(0,0,0,var(--tf-loom-vignette)) 100%
+  ) !important;
+  pointer-events: none !important;
+}

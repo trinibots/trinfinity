@@ -1,0 +1,10 @@
+{
+  "name": "[Trinfinity] Undertow",
+  "trinfinity_theme": "undertow",
+  "description": "Trinfinity theme preset: Undertow",
+  "author": "trinity (trinachronism)",
+  "bg_color": "#04080a",
+  "accent_color": "#1a4a3a",
+  "accent_soft": "#3bab7e",
+  "text_color": "#d4ece6"
+}

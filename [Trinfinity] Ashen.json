@@ -1,0 +1,42 @@
+/* ============================================================
+   TRINFINITY — styles/trinfinity-loom.css
+   Loom: modern precision · tight geometry · corner softness
+   Vignette frames the text. The machine weaves the threads.
+   ============================================================ */
+
+[data-tf-style="loom"] .mes {
+  background: transparent !important;
+  border: none !important;
+}
+
+[data-tf-style="loom"] .mes[is_user="false"] .mes_block {
+  background: var(--tf-bg-surface) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: var(--tf-loom-radius) !important;
+  padding: 12px 16px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+[data-tf-style="loom"] .mes[is_user="true"] .mes_block {
+  background: var(--tf-bg-user) !important;
+  border: 1px solid var(--tf-accent-border) !important;
+  border-radius: var(--tf-loom-radius) !important;
+  padding: 12px 16px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Vignette overlay — text centre is always the brightest point */
+[data-tf-style="loom"] .mes_block::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: radial-gradient(
+    ellipse at center,
+    transparent var(--tf-loom-vignette-spread),
+    rgba(0,0,0,var(--tf-loom-vignette)) 100%
+  ) !important;
+  pointer-events: none !important;
+  border-radius: var(--tf-loom-radius) !important;
+}
