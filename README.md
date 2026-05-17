@@ -114,4 +114,4 @@ MIT — do whatever you want with it, just credit trinity (trinachronism).
 
 ---
 
-*Built with coffee and Claude.*
+*Built with coffee, neurospicy inspiration and AI assistance.*
