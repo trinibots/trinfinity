@@ -777,6 +777,25 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   background: transparent !important;
 }
 
+/* ST actual DOM structure — mesAvatarWrapper sits beside mes_block in flex */
+.mesAvatarWrapper {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.mesAvatarWrapper .avatar {
+  overflow: hidden !important;
+}
+
+.mesAvatarWrapper .avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
 
 /* ──────────────────────────────────────────────────────────
    GOSSAMER
@@ -807,8 +826,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 }
 
 /* Feathered avatar — soft dissolve at edges */
-[data-tf-style="gossamer"] .avatar_wrapper img,
-[data-tf-style="gossamer"] .mes_avatar img {
+[data-tf-style="gossamer"] .mesAvatarWrapper .avatar img {
   mask-image: radial-gradient(
     ellipse at center,
     black 40%,
@@ -848,14 +866,14 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   flex-direction: row-reverse !important;
 }
 
-[data-tf-style="fade"] .mes_avatar,
-[data-tf-style="fade"] .avatar_wrapper {
+[data-tf-style="fade"] .mesAvatarWrapper,
+[data-tf-style="fade"] .mesAvatarWrapper {
   position: relative !important;
   z-index: 1 !important;
 }
 
-[data-tf-style="fade"] .mes[is_user="false"] .mes_avatar img,
-[data-tf-style="fade"] .mes[is_user="false"] .avatar_wrapper img {
+[data-tf-style="fade"] .mes[is_user="false"] .mesAvatarWrapper .avatar img,
+[data-tf-style="fade"] .mes[is_user="false"] .mesAvatarWrapper .avatar img {
   mask-image: linear-gradient(
     to right,
     black var(--tf-fade-start),
@@ -870,8 +888,8 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   ) !important;
 }
 
-[data-tf-style="fade"] .mes[is_user="true"] .mes_avatar img,
-[data-tf-style="fade"] .mes[is_user="true"] .avatar_wrapper img {
+[data-tf-style="fade"] .mes[is_user="true"] .mesAvatarWrapper .avatar img,
+[data-tf-style="fade"] .mes[is_user="true"] .mesAvatarWrapper .avatar img {
   mask-image: linear-gradient(
     to left,
     black var(--tf-fade-start),
@@ -983,15 +1001,15 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 
 [data-tf-style="ebb"] .mes[is_user="true"] { flex-direction: row-reverse !important; }
 
-[data-tf-style="ebb"] .mes_avatar img,
-[data-tf-style="ebb"] .avatar_wrapper img {
+[data-tf-style="ebb"] .mesAvatarWrapper .avatar img,
+[data-tf-style="ebb"] .mesAvatarWrapper .avatar img {
   opacity: var(--tf-ebb-opacity) !important;
   filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 100)) !important;
   transition: opacity 0.4s, filter 0.4s !important;
 }
 
-[data-tf-style="ebb"] .mes:hover .mes_avatar img,
-[data-tf-style="ebb"] .mes:hover .avatar_wrapper img {
+[data-tf-style="ebb"] .mes:hover .mesAvatarWrapper .avatar img,
+[data-tf-style="ebb"] .mes:hover .mesAvatarWrapper .avatar img {
   opacity: calc(var(--tf-ebb-opacity) + 0.2) !important;
   filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 150)) !important;
 }
@@ -1028,8 +1046,8 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 
 [data-tf-style="flow"] .mes[is_user="true"] { flex-direction: row-reverse !important; }
 
-[data-tf-style="flow"] .mes_avatar,
-[data-tf-style="flow"] .avatar_wrapper {
+[data-tf-style="flow"] .mesAvatarWrapper,
+[data-tf-style="flow"] .mesAvatarWrapper {
   transform: scale(var(--tf-flow-scale)) !important;
   transform-origin: bottom center !important;
   transition: transform 0.3s !important;
