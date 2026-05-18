@@ -1,4 +1,4 @@
-/* ============================================================
+`/* ============================================================
    TRINFINITY — trinfinity-core.js
    Monolithic build — all modules inlined
    by trinity (trinachronism)
