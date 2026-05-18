@@ -85,6 +85,7 @@
   /* Ebb */
   --tf-ebb-opacity:       0.45;
   --tf-ebb-desaturate:    60%;
+  --tf-ebb-saturate:      0.40;
 
   /* Flow */
   --tf-flow-scale:        1.06;
@@ -350,6 +351,7 @@ a:hover      { color: var(--tf-accent) !important; text-decoration: underline !i
 
 /* ── HR ── */
 hr { border-color: var(--tf-accent-border-mid) !important; }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-avatar.css
    Portrait injection system CSS
@@ -432,18 +434,51 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
    PER-STYLE PORTRAIT TREATMENTS
    ============================================================ */
 
-/* ── GOSSAMER — radial feather dissolve ── */
+/* ── GOSSAMER — large, soft, gauzy, dissolves at edges ── */
+
+[data-tf-style="gossamer"] .tf-portrait {
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
 [data-tf-style="gossamer"] .tf-portrait-img {
+  filter: blur(var(--tf-gossamer-blur)) !important;
+  opacity: var(--tf-gossamer-opacity) !important;
+  object-position: top center !important;
+  transform: scale(1.08) !important;
   mask-image: radial-gradient(
-    ellipse at center,
-    black 45%,
-    transparent calc(45% + var(--tf-gossamer-feather))
+    ellipse 85% 90% at 40% 30%,
+    black 30%,
+    transparent calc(30% + var(--tf-gossamer-feather))
   ) !important;
   -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    black 45%,
-    transparent calc(45% + var(--tf-gossamer-feather))
+    ellipse 85% 90% at 40% 30%,
+    black 30%,
+    transparent calc(30% + var(--tf-gossamer-feather))
   ) !important;
+  transition: filter 0.6s ease, opacity 0.6s ease !important;
+}
+
+[data-tf-style="gossamer"] .mes[is_user="true"] .tf-portrait-img {
+  mask-image: radial-gradient(
+    ellipse 85% 90% at 60% 30%,
+    black 30%,
+    transparent calc(30% + var(--tf-gossamer-feather))
+  ) !important;
+  -webkit-mask-image: radial-gradient(
+    ellipse 85% 90% at 60% 30%,
+    black 30%,
+    transparent calc(30% + var(--tf-gossamer-feather))
+  ) !important;
+}
+
+[data-tf-style="gossamer"] .mes:hover .tf-portrait-img {
+  filter: blur(calc(var(--tf-gossamer-blur) * 0.5)) !important;
+  opacity: calc(var(--tf-gossamer-opacity) + 0.15) !important;
+}
+
+[data-tf-style="gossamer"] .tf-portrait-stats {
+  opacity: 0.5 !important;
 }
 
 /* ── FADE — horizontal gradient dissolve into message ── */
@@ -481,12 +516,12 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   ) !important;
 }
 
-/* ── PULSE — breathing glow border on portrait edge ── */
+/* ── PULSE — vertical line only, NO animation on portrait ── */
 [data-tf-style="pulse"] .tf-portrait {
   border-radius: 0 !important;
   border-left: 1px solid
     rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.5) !important;
-  animation: tf-pulse-breathe var(--tf-pulse-speed) ease-in-out infinite !important;
+  animation: none !important;
 }
 
 [data-tf-style="pulse"] .mes[is_user="true"] .tf-portrait {
@@ -498,12 +533,13 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 /* ── EBB — portrait recedes, desaturated, like a memory ── */
 [data-tf-style="ebb"] .tf-portrait-img {
   opacity: var(--tf-ebb-opacity) !important;
-  filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 100)) !important;
+  filter: saturate(var(--tf-ebb-saturate)) !important;
+  transition: opacity 0.4s ease, filter 0.4s ease !important;
 }
 
 [data-tf-style="ebb"] .mes:hover .tf-portrait-img {
   opacity: calc(var(--tf-ebb-opacity) + 0.2) !important;
-  filter: saturate(calc(1 - var(--tf-ebb-desaturate) / 150)) !important;
+  filter: saturate(calc(var(--tf-ebb-saturate) * 1.5)) !important;
 }
 
 /* ── FLOW — portrait advances, full colour, scaled ── */
@@ -548,6 +584,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   ) !important;
   pointer-events: none !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-gossamer.css
    Gossamer: frosted glass · feathered edges · soft blur
@@ -575,6 +612,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
     inset 0 0 0 1px var(--tf-accent-border),
     0 4px 24px rgba(0,0,0,0.25) !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-fade.css
    Fade: architectural softness · portrait dissolves into strip
@@ -617,6 +655,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   padding: 12px 16px !important;
   flex: 1 !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-pulse.css
    Pulse: flatline accent bar · breathing glow animation
@@ -670,7 +709,6 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   padding: 4px 14px !important;
 }
 
-/* The flatline — static bar that breathes */
 [data-tf-style="pulse"] .mes[is_user="false"] .mes_block::before {
   content: '' !important;
   position: absolute !important;
@@ -687,13 +725,13 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   animation: tf-pulse-breathe var(--tf-pulse-speed) ease-in-out infinite !important;
 }
 
-/* User message — mirrored bar on the right */
 [data-tf-style="pulse"] .mes[is_user="true"] .mes_block {
   border-right: 1px solid
     rgba(var(--tf-pulse-r),var(--tf-pulse-g),var(--tf-pulse-b),0.30) !important;
   border-left: none !important;
   animation: tf-pulse-breathe var(--tf-pulse-speed) ease-in-out infinite !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-ebb.css
    Ebb: portrait recedes · desaturated · fading like memory
@@ -725,6 +763,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   border-left: none !important;
   border-right: 1px solid var(--tf-accent-border-mid) !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-flow.css
    Flow: portrait advances · full colour · stepped forward
@@ -761,6 +800,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   background: var(--tf-bg-user) !important;
   border-radius: 10px 0 10px 10px !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-void.css
    Void: no borders · intentional negative space
@@ -790,7 +830,6 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   display: block !important;
 }
 
-/* Only the faintest structural hint — barely there */
 [data-tf-style="void"] .mes[is_user="false"] .mes_block {
   border-bottom: 1px solid var(--tf-accent-border-sub) !important;
 }
@@ -799,10 +838,10 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   border-bottom: 1px solid rgba(139,92,246,0.05) !important;
 }
 
-/* Avatar sits small and clean */
 [data-tf-style="void"] .mesAvatarWrapper {
   padding-top: 20px !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-loom.css
    Loom: modern precision · tight geometry · corner softness
@@ -832,7 +871,6 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   overflow: hidden !important;
 }
 
-/* Vignette overlay — text centre is always the brightest point */
 [data-tf-style="loom"] .mes_block::after {
   content: '' !important;
   position: absolute !important;
@@ -845,6 +883,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   pointer-events: none !important;
   border-radius: var(--tf-loom-radius) !important;
 }
+
 /* ============================================================
    TRINFINITY — styles/trinfinity-panel.css
    Floating lemniscate button + settings panel
