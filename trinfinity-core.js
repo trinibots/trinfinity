@@ -197,10 +197,11 @@
 
   function enhanceMessage(mes) {
     if (tf_enhanced.has(mes)) return;
-    const avatarUrl = mes.dataset.avatarOriginal || mes.dataset.avatarThumb || mes.dataset.avatar || '';
-    if (!avatarUrl) return;
     const wrapper = mes.querySelector('.mesAvatarWrapper');
     if (!wrapper) return;
+    const existingImg = wrapper.querySelector('img');
+    const avatarUrl = mes.dataset.avatarOriginal || mes.dataset.avatarThumb || mes.dataset.avatar || existingImg?.src || '';
+    if (!avatarUrl) return;
     tf_enhanced.add(mes);
 
     const mesId  = wrapper.querySelector('.mesIDDisplay');
@@ -229,7 +230,9 @@
     for (let i = idx - 1; i >= 0 && ghosts.length < 2; i--) {
       const prev = allMes[i];
       if (prev.getAttribute('is_user') !== String(isUser)) continue;
-      const prevUrl = prev.dataset.avatarOriginal || prev.dataset.avatarThumb || prev.dataset.avatar || '';
+      const prevWrapper = prev.querySelector('.mesAvatarWrapper');
+      const prevImg = prevWrapper?.querySelector('img');
+      const prevUrl = prev.dataset.avatarOriginal || prev.dataset.avatarThumb || prev.dataset.avatar || prevImg?.src || '';
       if (prevUrl) ghosts.push(prevUrl);
     }
     ghosts.forEach(url => wrapper.appendChild(tfMakePortrait(url, w, h, false)));
