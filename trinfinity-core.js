@@ -188,9 +188,9 @@ console.log('TRINFINITY LOADING');
 
   function toFullAvatarUrl(url) {
     if (!url) return url;
-    return url
-      .replace(/thumbnail\?type=persona&file=/, 'characters/')
-      .replace(/thumbnail\?type=avatar&file=/, 'characters/');
+    /* Persona images live in a different folder — keep as thumbnail */
+    /* Only convert character avatars to full-size */
+    return url.replace(/thumbnail\?type=avatar&file=/, 'characters/');
   }
 
   function tfMakePortrait(avatarUrl, w, h, isMain) {
