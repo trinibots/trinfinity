@@ -9,6 +9,8 @@
 'use strict';
 console.log('TRINFINITY LOADING');
 
+(function() {
+
   const TF_VERSION = '0.3.1d';
   const TF_KEY     = 'trinfinity_settings';
   const TF_STYLES  = ['gossamer', 'fade', 'pulse', 'ebb', 'flow', 'void', 'loom'];
@@ -522,4 +524,6 @@ console.log('TRINFINITY LOADING');
     }
   }
 
-init();
+  init();
+
+})();
