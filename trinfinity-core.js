@@ -184,7 +184,12 @@
   const tf_enhanced = new WeakSet();
   let tf_avatarObserver = null;
 
-  function tfMakePortrait(avatarUrl, w, h, isMain) {
+  function toFullAvatarUrl(url) {
+    if (!url) return url;
+    return url
+      .replace(/thumbnail\?type=persona&file=/, 'characters/')
+      .replace(/thumbnail\?type=avatar&file=/, 'characters/');
+  }
     const portrait = document.createElement('div');
     portrait.className = isMain ? 'tf-portrait' : 'tf-portrait tf-portrait-ghost';
     const img = document.createElement('img');
@@ -201,7 +206,7 @@
     if (!wrapper) return;
     /* Read URL before we replace the img, then cache it */
     const existingImg = wrapper.querySelector('img');
-    const avatarUrl = mes.dataset.tfAvatar || mes.dataset.avatarOriginal || mes.dataset.avatarThumb || mes.dataset.avatar || existingImg?.src || '';
+    const avatarUrl = toFullAvatarUrl(mes.dataset.tfAvatar || mes.dataset.avatarOriginal || mes.dataset.avatarThumb || mes.dataset.avatar || existingImg?.src || '');
     if (!avatarUrl) return;
     mes.dataset.tfAvatar = avatarUrl; /* cache for ghost lookups */
     tf_enhanced.add(mes);
