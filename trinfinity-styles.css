@@ -67,7 +67,8 @@
   /* Gossamer */
   --tf-gossamer-blur:     10px;
   --tf-gossamer-opacity:  0.72;
-  --tf-gossamer-feather:  20%;
+  --tf-gossamer-feather-x:  20%;
+  --tf-gossamer-feather-y:  15%;
 
   /* Fade */
   --tf-fade-start:        40%;
@@ -463,30 +464,30 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   mask-image: linear-gradient(
       to bottom,
       transparent 0%,
-      black var(--tf-gossamer-feather),
-      black calc(100% - var(--tf-gossamer-feather)),
+      black var(--tf-gossamer-feather-y),
+      black calc(100% - var(--tf-gossamer-feather-y)),
       transparent 100%
     ),
     linear-gradient(
       to right,
       transparent 0%,
-      black var(--tf-gossamer-feather),
-      black calc(100% - var(--tf-gossamer-feather)),
+      black var(--tf-gossamer-feather-x),
+      black calc(100% - var(--tf-gossamer-feather-x)),
       transparent 100%
     ) !important;
   mask-composite: intersect !important;
   -webkit-mask-image: linear-gradient(
       to bottom,
       transparent 0%,
-      black var(--tf-gossamer-feather),
-      black calc(100% - var(--tf-gossamer-feather)),
+      black var(--tf-gossamer-feather-y),
+      black calc(100% - var(--tf-gossamer-feather-y)),
       transparent 100%
     ),
     linear-gradient(
       to right,
       transparent 0%,
-      black var(--tf-gossamer-feather),
-      black calc(100% - var(--tf-gossamer-feather)),
+      black var(--tf-gossamer-feather-x),
+      black calc(100% - var(--tf-gossamer-feather-x)),
       transparent 100%
     ) !important;
   -webkit-mask-composite: source-in !important;
