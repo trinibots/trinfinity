@@ -188,8 +188,11 @@ console.log('TRINFINITY LOADING');
 
   function toFullAvatarUrl(url) {
     if (!url) return url;
-    /* Persona images live in a different folder — keep as thumbnail */
-    /* Only convert character avatars to full-size */
+    /* Persona images — add size=full for full resolution */
+    if (url.includes('type=persona') && !url.includes('size=full')) {
+      return url + '&size=full';
+    }
+    /* Character avatars — use direct file path */
     return url.replace(/thumbnail\?type=avatar&file=/, 'characters/');
   }
 
