@@ -188,9 +188,10 @@ console.log('TRINFINITY LOADING');
 
   function toFullAvatarUrl(url) {
     if (!url) return url;
-    /* Persona images — add size=full for full resolution */
-    if (url.includes('type=persona') && !url.includes('size=full')) {
-      return url + '&size=full';
+    /* Persona images — served from /User Avatars/ directly */
+    if (url.includes('type=persona')) {
+      const match = url.match(/file=([^&]+)/);
+      if (match) return '/User%20Avatars/' + match[1];
     }
     /* Character avatars — use direct file path */
     return url.replace(/thumbnail\?type=avatar&file=/, 'characters/');
