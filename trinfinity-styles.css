@@ -488,8 +488,8 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 }
 
 [data-tf-style="gossamer"] .mes:hover .tf-portrait-img {
-  filter: blur(calc(var(--tf-gossamer-blur) * 0.5)) !important;
-  opacity: calc(var(--tf-gossamer-opacity) + 0.15) !important;
+  filter: blur(0px) !important;
+  opacity: 1 !important;
 }
 
 [data-tf-style="gossamer"] .tf-portrait-stats {
@@ -607,7 +607,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
    ============================================================ */
 
 [data-tf-style="gossamer"] .mes[is_user="false"] .mes_block {
-  background: rgba(18,12,36,var(--tf-gossamer-opacity)) !important;
+  background: var(--tf-bg-surface) !important;
   border: none !important;
   border-radius: 0 12px 12px 12px !important;
   backdrop-filter: blur(var(--tf-gossamer-blur)) !important;
@@ -618,7 +618,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 }
 
 [data-tf-style="gossamer"] .mes[is_user="true"] .mes_block {
-  background: rgba(42,31,74,var(--tf-gossamer-opacity)) !important;
+  background: var(--tf-bg-user) !important;
   border: none !important;
   border-radius: 12px 0 12px 12px !important;
   backdrop-filter: blur(var(--tf-gossamer-blur)) !important;
