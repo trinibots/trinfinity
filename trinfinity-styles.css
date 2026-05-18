@@ -67,7 +67,7 @@
   /* Gossamer */
   --tf-gossamer-blur:     10px;
   --tf-gossamer-opacity:  0.72;
-  --tf-gossamer-feather:  32px;
+  --tf-gossamer-feather:  20%;
 
   /* Fade */
   --tf-fade-start:        40%;
@@ -423,6 +423,14 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 .mes[is_user="true"] .mesAvatarWrapper { order: 2 !important; }
 .mes[is_user="true"] .mes_block        { order: 1 !important; }
 
+/* Ensure user portrait is always visible */
+[data-tf-style="gossamer"] .mes[is_user="true"] .mesAvatarWrapper,
+[data-tf-style="gossamer"] .mes[is_user="true"] .tf-portrait,
+[data-tf-style="gossamer"] .mes[is_user="true"] .tf-portrait-img {
+  display: block !important;
+  visibility: visible !important;
+}
+
 /* ── Base mes reset ── */
 .mes {
   border: none !important;
@@ -434,11 +442,11 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
    PER-STYLE PORTRAIT TREATMENTS
    ============================================================ */
 
-/* ── GOSSAMER — large, soft, gauzy, dissolves at edges ── */
+/* ── GOSSAMER — soft, gauzy, uniform blur and opacity ── */
 
 [data-tf-style="gossamer"] .tf-portrait {
   border-radius: 0 !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 [data-tf-style="gossamer"] .tf-portrait-img {
@@ -446,30 +454,37 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   opacity: var(--tf-gossamer-opacity) !important;
   object-position: top center !important;
   transform: scale(1.08) !important;
-  mask-image: radial-gradient(
-    ellipse 85% 90% at 40% 30%,
-    black 30%,
-    transparent calc(30% + var(--tf-gossamer-feather))
-  ) !important;
-  -webkit-mask-image: radial-gradient(
-    ellipse 85% 90% at 40% 30%,
-    black 30%,
-    transparent calc(30% + var(--tf-gossamer-feather))
-  ) !important;
+  mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black var(--tf-gossamer-feather),
+      black calc(100% - var(--tf-gossamer-feather)),
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black var(--tf-gossamer-feather),
+      black calc(100% - var(--tf-gossamer-feather)),
+      transparent 100%
+    ) !important;
+  mask-composite: intersect !important;
+  -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black var(--tf-gossamer-feather),
+      black calc(100% - var(--tf-gossamer-feather)),
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black var(--tf-gossamer-feather),
+      black calc(100% - var(--tf-gossamer-feather)),
+      transparent 100%
+    ) !important;
+  -webkit-mask-composite: source-in !important;
   transition: filter 0.6s ease, opacity 0.6s ease !important;
-}
-
-[data-tf-style="gossamer"] .mes[is_user="true"] .tf-portrait-img {
-  mask-image: radial-gradient(
-    ellipse 85% 90% at 60% 30%,
-    black 30%,
-    transparent calc(30% + var(--tf-gossamer-feather))
-  ) !important;
-  -webkit-mask-image: radial-gradient(
-    ellipse 85% 90% at 60% 30%,
-    black 30%,
-    transparent calc(30% + var(--tf-gossamer-feather))
-  ) !important;
 }
 
 [data-tf-style="gossamer"] .mes:hover .tf-portrait-img {
