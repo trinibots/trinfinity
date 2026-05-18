@@ -1,4 +1,4 @@
-`/* ============================================================
+/* ============================================================
    TRINFINITY — trinfinity-core.js
    Monolithic build — all modules inlined
    by trinity (trinachronism)
@@ -383,33 +383,29 @@
   function buildButton() {
     const existing = document.getElementById('trinfinity-btn');
     if (existing) existing.remove();
-    const btn = document.createElement('div');
-    btn.id = 'trinfinity-btn'; btn.title = 'Trinfinity';
-    btn.innerHTML = makeLemniscateSVG();
-    btn.style.right  = cfg.btnX || '20px';
-    btn.style.bottom = cfg.btnY || '80px';
-    btn.addEventListener('click', (e) => { if (btn._dragged) { btn._dragged = false; return; } togglePanel(); });
 
-    let startX, startY, startRight, startBottom, moved;
-    btn.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return;
-      moved = false; startX = e.clientX; startY = e.clientY;
-      startRight = parseInt(btn.style.right) || 20; startBottom = parseInt(btn.style.bottom) || 80;
-      function onMove(e) {
-        const dx = startX - e.clientX, dy = startY - e.clientY;
-        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
-        btn.style.right  = Math.max(0, startRight  + dx) + 'px';
-        btn.style.bottom = Math.max(0, startBottom + dy) + 'px';
-      }
-      function onUp() {
-        if (moved) { btn._dragged = true; cfg.btnX = btn.style.right; cfg.btnY = btn.style.bottom; }
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-      }
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-      e.preventDefault();
-    });
+    const btn = document.createElement('button');
+    btn.id = 'trinfinity-btn';
+    btn.title = 'Trinfinity';
+    btn.textContent = '∞';
+    btn.style.cssText = `
+      position: fixed !important;
+      right: 20px !important;
+      bottom: 80px !important;
+      z-index: 99999 !important;
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 50% !important;
+      border: 1px solid rgba(255,255,255,0.2) !important;
+      background: rgba(0,0,0,0.6) !important;
+      color: var(--tf-accent-soft, #a78bfa) !important;
+      font-size: 20px !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    `;
+    btn.addEventListener('click', togglePanel);
     document.body.appendChild(btn);
   }
 
