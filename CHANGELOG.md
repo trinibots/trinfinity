@@ -13,7 +13,50 @@ x.y.z
 
 ---
 
-## v0.3.1 — Stage 3, Save 1: Style Fixes + Portrait Stack
+## v0.3.1d — Hotfix: Remove ghost portrait stack
+**Files:** trinfinity-core.js
+
+### Fixed
+- Removed ghost portrait stack feature — was showing 2-3 duplicate portraits per message
+  in alternating char/user chats because same character URL repeated. Single portrait
+  per message restored.
+
+---
+
+## v0.3.1c — Hotfix: Avatar URL source
+**Files:** trinfinity-core.js
+
+### Fixed
+- Avatar portraits not showing at all — ST does not store avatar URL in `data-avatar-original`
+  or any dataset attribute on `.mes` elements in this version
+- Fixed by reading URL from the existing `img` element inside `.mesAvatarWrapper` before
+  replacing it, then caching as `data-tf-avatar` for ghost lookups
+
+---
+
+## v0.3.1b — Hotfix: Monolithic build
+**Files:** trinfinity-core.js
+
+### Changed
+- Eliminated modular src/ loading entirely — all theme, font, avatar, slider, and panel
+  code now inlined into single trinfinity-core.js
+- Fixes persistent `src/src/` double-path error caused by `document.currentScript` being
+  null inside `loadModules()` callback context, causing incorrect base path resolution
+- src/ folder retained in repo but no longer loaded at runtime
+
+---
+
+## v0.3.1a — Hotfix: src/ module files
+**Files:** src/trinfinity-themes.js · src/trinfinity-fonts.js · src/trinfinity-avatar.js · src/trinfinity-sliders.js · src/trinfinity-panel.js
+
+### Fixed
+- All five src/ files contained copies of old trinfinity-core.js instead of correct module code
+  (result of scrambled upload during v0.3.0 push)
+- Replaced with correct module content for each file
+
+---
+
+
 **Files:** src/trinfinity-avatar.js · styles/trinfinity-avatar.css · trinfinity-panel.js
 
 ### Added
