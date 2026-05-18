@@ -6,8 +6,7 @@
    v0.3.1
    ============================================================ */
 
-(function () {
-  'use strict';
+'use strict';
 
   const TF_VERSION = '0.3.1d';
   const TF_KEY     = 'trinfinity_settings';
@@ -522,6 +521,4 @@
     }
   }
 
-  init();
-
-})();
+setTimeout(init, 100);
