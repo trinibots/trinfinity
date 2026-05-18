@@ -578,6 +578,9 @@ console.log('TRINFINITY LOADING');
           ${buildSettingsHTML('tfd')}
         </div>`;
 
+      block.addEventListener('click', (e) => e.stopPropagation());
+      block.addEventListener('touchstart', (e) => e.stopPropagation());
+      block.addEventListener('touchend', (e) => e.stopPropagation());
       menu.prepend(block);
 
       let open = false;
