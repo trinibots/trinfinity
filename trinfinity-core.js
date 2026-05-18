@@ -515,10 +515,10 @@
 
     /* Use setTimeout(0) to guarantee body exists regardless of module load timing */
     if (document.body) {
-      setTimeout(ready, 0);
+      setTimeout(ready, 500);
     } else {
-      document.addEventListener('DOMContentLoaded', () => setTimeout(ready, 0));
+      document.addEventListener('DOMContentLoaded', () => setTimeout(ready, 500));
     }
   }
 
-setTimeout(init, 100);
+init();
