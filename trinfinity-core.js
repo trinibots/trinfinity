@@ -479,15 +479,24 @@
   }
 
   function addExtensionMenuEntry() {
-    setTimeout(() => {
-      const menu = document.querySelector('#extensionsMenu, .extensions-menu, #extension-settings');
+    function tryAdd() {
+      const menu = document.getElementById('extensionsMenu');
       if (!menu || document.getElementById('tf-ext-btn')) return;
       const btn = document.createElement('div');
       btn.id = 'tf-ext-btn'; btn.className = 'tf-ext-menu-btn';
       btn.textContent = '∞ Trinfinity';
+      btn.style.cssText = 'padding:8px 16px;cursor:pointer;color:var(--tf-accent-soft,#a78bfa);font-size:13px;';
       btn.addEventListener('click', togglePanel);
       menu.prepend(btn);
-    }, 2000);
+    }
+
+    /* Try immediately, then watch for menu to appear */
+    tryAdd();
+    const observer = new MutationObserver(() => tryAdd());
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    /* Stop watching after 30s */
+    setTimeout(() => observer.disconnect(), 30000);
   }
 
 
