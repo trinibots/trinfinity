@@ -19,7 +19,7 @@ console.log('TRINFINITY LOADING');
     style: 'gossamer', theme: 'ultraviolet', font: 'A',
     customDisplayFont: '', customBodyFont: '',
     btnX: '20px', btnY: '80px',
-    portraitW: 120, portraitH: 160,
+    portraitW: 120, portraitH: 160, portraitScale: 100,
     gossamerBlur: 10, gossamerOpacity: 72, gossamerFeatherX: 20, gossamerFeatherY: 15,
     fadeStart: 40, fadeReach: 70, fadeFloor: 8,
     pulseSpeed: 2.4, pulseIntensity: 70, pulseRadius: 8,
@@ -42,8 +42,9 @@ console.log('TRINFINITY LOADING');
     document.documentElement.style.setProperty(name, String(value));
   }
   function applyAllVars() {
-    setVar('--tf-portrait-w',          cfg.portraitW + 'px');
-    setVar('--tf-portrait-h',          cfg.portraitH + 'px');
+    const scale = cfg.portraitScale / 100;
+    setVar('--tf-portrait-w',          Math.round(120 * scale) + 'px');
+    setVar('--tf-portrait-h',          Math.round(160 * scale) + 'px');
     setVar('--tf-gossamer-blur',        cfg.gossamerBlur + 'px');
     setVar('--tf-gossamer-opacity',     (cfg.gossamerOpacity / 100).toFixed(2));
     setVar('--tf-gossamer-feather-x',   cfg.gossamerFeatherX + '%');
@@ -309,8 +310,7 @@ console.log('TRINFINITY LOADING');
   };
 
   const TF_GLOBAL_SLIDERS = [
-    { key:'portraitW', label:'Portrait Width',  min:60, max:220, step:5,  unit:'px', varName:'--tf-portrait-w', format:v=>v+'px' },
-    { key:'portraitH', label:'Portrait Height', min:80, max:340, step:10, unit:'px', varName:'--tf-portrait-h', format:v=>v+'px' },
+    { key:'portraitScale', label:'Portrait Size', min:50, max:200, step:5, unit:'%', varName:'--tf-portrait-scale', format:v=>v+'%' },
   ];
 
   function renderSliders(style) {
@@ -350,6 +350,11 @@ console.log('TRINFINITY LOADING');
         const def = allDefs.find(d => d.key === key);
         setVar(varName, def ? def.format(raw) : raw);
         if (key === 'ebbDesaturate') setVar('--tf-ebb-saturate', (1 - raw/100).toFixed(2));
+        if (key === 'portraitScale') {
+          const s = raw / 100;
+          setVar('--tf-portrait-w', Math.round(120 * s) + 'px');
+          setVar('--tf-portrait-h', Math.round(160 * s) + 'px');
+        }
         const valEl = document.getElementById('tfv-' + key);
         if (valEl) valEl.textContent = raw + (def?.unit || '');
         if (['pulseR','pulseG','pulseB'].includes(key)) {
