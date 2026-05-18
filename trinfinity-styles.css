@@ -67,8 +67,8 @@
   /* Gossamer */
   --tf-gossamer-blur:     10px;
   --tf-gossamer-opacity:  0.72;
-  --tf-gossamer-feather-x:  20px;
-  --tf-gossamer-feather-y:  15px;
+  --tf-gossamer-feather-x:  20%;
+  --tf-gossamer-feather-y:  15%;
 
   /* Fade */
   --tf-fade-start:        40%;
@@ -462,14 +462,14 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   object-position: top center !important;
   transform: scale(1.08) !important;
   mask-image: radial-gradient(
-    ellipse calc(100% - var(--tf-gossamer-feather-x)) calc(100% - var(--tf-gossamer-feather-y)) at 50% 50%,
-    black 40%,
-    transparent 100%
+    ellipse 80% 80% at 50% 50%,
+    black var(--tf-gossamer-feather-x),
+    transparent calc(var(--tf-gossamer-feather-x) + 40%)
   ) !important;
   -webkit-mask-image: radial-gradient(
-    ellipse calc(100% - var(--tf-gossamer-feather-x)) calc(100% - var(--tf-gossamer-feather-y)) at 50% 50%,
-    black 40%,
-    transparent 100%
+    ellipse 80% 80% at 50% 50%,
+    black var(--tf-gossamer-feather-x),
+    transparent calc(var(--tf-gossamer-feather-x) + 40%)
   ) !important;
   transition: filter 0.6s ease, opacity 0.6s ease !important;
 }
