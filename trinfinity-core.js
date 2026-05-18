@@ -3,7 +3,7 @@
    Monolithic build — all modules inlined
    by trinity (trinachronism)
    https://github.com/trinibots/trinfinity
-   v0.3.1
+   v0.3.1c
    ============================================================ */
 
 (function () {
@@ -199,9 +199,11 @@
     if (tf_enhanced.has(mes)) return;
     const wrapper = mes.querySelector('.mesAvatarWrapper');
     if (!wrapper) return;
+    /* Read URL before we replace the img, then cache it */
     const existingImg = wrapper.querySelector('img');
-    const avatarUrl = mes.dataset.avatarOriginal || mes.dataset.avatarThumb || mes.dataset.avatar || existingImg?.src || '';
+    const avatarUrl = mes.dataset.tfAvatar || mes.dataset.avatarOriginal || mes.dataset.avatarThumb || mes.dataset.avatar || existingImg?.src || '';
     if (!avatarUrl) return;
+    mes.dataset.tfAvatar = avatarUrl; /* cache for ghost lookups */
     tf_enhanced.add(mes);
 
     const mesId  = wrapper.querySelector('.mesIDDisplay');
@@ -232,7 +234,7 @@
       if (prev.getAttribute('is_user') !== String(isUser)) continue;
       const prevWrapper = prev.querySelector('.mesAvatarWrapper');
       const prevImg = prevWrapper?.querySelector('img');
-      const prevUrl = prev.dataset.avatarOriginal || prev.dataset.avatarThumb || prev.dataset.avatar || prevImg?.src || '';
+      const prevUrl = prev.dataset.tfAvatar || prev.dataset.avatarOriginal || prev.dataset.avatarThumb || prev.dataset.avatar || prevImg?.src || '';
       if (prevUrl) ghosts.push(prevUrl);
     }
     ghosts.forEach(url => wrapper.appendChild(tfMakePortrait(url, w, h, false)));
