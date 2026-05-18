@@ -20,7 +20,7 @@ console.log('TRINFINITY LOADING');
     customDisplayFont: '', customBodyFont: '',
     btnX: '20px', btnY: '80px',
     portraitW: 120, portraitH: 160,
-    gossamerBlur: 10, gossamerOpacity: 72, gossamerFeather: 20,
+    gossamerBlur: 10, gossamerOpacity: 72, gossamerFeatherX: 20, gossamerFeatherY: 15,
     fadeStart: 40, fadeReach: 70, fadeFloor: 8,
     pulseSpeed: 2.4, pulseIntensity: 70, pulseRadius: 8,
     pulseR: 139, pulseG: 92, pulseB: 246, pulseAuto: true,
@@ -46,7 +46,8 @@ console.log('TRINFINITY LOADING');
     setVar('--tf-portrait-h',          cfg.portraitH + 'px');
     setVar('--tf-gossamer-blur',        cfg.gossamerBlur + 'px');
     setVar('--tf-gossamer-opacity',     (cfg.gossamerOpacity / 100).toFixed(2));
-    setVar('--tf-gossamer-feather',     cfg.gossamerFeather + '%');
+    setVar('--tf-gossamer-feather-x',   cfg.gossamerFeatherX + '%');
+    setVar('--tf-gossamer-feather-y',   cfg.gossamerFeatherY + '%');
     setVar('--tf-fade-start',           cfg.fadeStart + '%');
     setVar('--tf-fade-reach',           cfg.fadeReach + '%');
     setVar('--tf-fade-floor',           (cfg.fadeFloor / 100).toFixed(2));
@@ -270,9 +271,10 @@ console.log('TRINFINITY LOADING');
 
   const TF_SLIDER_DEFS = {
     gossamer: [
-      { key:'gossamerBlur',    label:'Blur',          min:0,   max:24,  step:1,   unit:'px', varName:'--tf-gossamer-blur',    format:v=>v+'px' },
-      { key:'gossamerOpacity', label:'Opacity',       min:0,   max:95,  step:1,   unit:'%',  varName:'--tf-gossamer-opacity', format:v=>(v/100).toFixed(2) },
-      { key:'gossamerFeather', label:'Avatar Feather',min:0,   max:45,  step:1,   unit:'%', varName:'--tf-gossamer-feather', format:v=>v+'%' },
+      { key:'gossamerBlur',     label:'Blur',          min:0,  max:24, step:1, unit:'px', varName:'--tf-gossamer-blur',      format:v=>v+'px' },
+      { key:'gossamerOpacity',  label:'Opacity',       min:0,  max:95, step:1, unit:'%',  varName:'--tf-gossamer-opacity',   format:v=>(v/100).toFixed(2) },
+      { key:'gossamerFeatherX', label:'Feather X',     min:0,  max:45, step:1, unit:'%',  varName:'--tf-gossamer-feather-x', format:v=>v+'%' },
+      { key:'gossamerFeatherY', label:'Feather Y',     min:0,  max:45, step:1, unit:'%',  varName:'--tf-gossamer-feather-y', format:v=>v+'%' },
     ],
     fade: [
       { key:'fadeStart', label:'Fade Start',    min:0,  max:90,  step:1, unit:'%', varName:'--tf-fade-start',  format:v=>v+'%' },
