@@ -574,7 +574,7 @@ console.log('TRINFINITY LOADING');
           <span>∞ Trinfinity</span>
           <span id="tf-drawer-chevron">▾</span>
         </div>
-        <div id="tf-drawer-body" style="display:none;flex-direction:column;gap:14px;padding:14px 16px 18px;">
+        <div id="tf-drawer-body" style="display:none;flex-direction:column;gap:14px;padding:14px 16px 18px;color:var(--tf-text,#e8e2f5);font-family:var(--tf-font-body,'Calibri',sans-serif);font-size:13px;">
           ${buildSettingsHTML('tfd')}
         </div>`;
 
@@ -583,7 +583,9 @@ console.log('TRINFINITY LOADING');
       let open = false;
       document.getElementById('tf-drawer-header').addEventListener('click', () => {
         open = !open;
-        document.getElementById('tf-drawer-body').style.display = open ? 'flex' : 'none';
+        const body = document.getElementById('tf-drawer-body');
+        body.style.display = open ? 'flex' : 'none';
+        body.style.flexDirection = 'column';
         document.getElementById('tf-drawer-chevron').textContent = open ? '▴' : '▾';
       });
 
