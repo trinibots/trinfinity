@@ -382,6 +382,11 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease !important;
 }
 
+/* Gossamer needs visible overflow for soft edge mask to work */
+[data-tf-style="gossamer"] .tf-portrait {
+  overflow: visible !important;
+}
+
 /* ── Portrait image ── */
 .tf-portrait-img {
   width: 100% !important;
@@ -446,7 +451,8 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 
 [data-tf-style="gossamer"] .tf-portrait {
   border-radius: 0 !important;
-  overflow: hidden !important;
+  overflow: visible !important;
+  background: transparent !important;
 }
 
 [data-tf-style="gossamer"] .tf-portrait-img {
