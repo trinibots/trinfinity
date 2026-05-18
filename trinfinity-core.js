@@ -19,6 +19,7 @@ console.log('TRINFINITY LOADING');
     style: 'gossamer', theme: 'ultraviolet', font: 'A',
     customDisplayFont: '', customBodyFont: '',
     btnX: '20px', btnY: '80px',
+    uiMode: 'auto', /* 'button' | 'menu' | 'auto' */
     portraitW: 120, portraitH: 160, portraitScale: 100,
     gossamerBlur: 10, gossamerOpacity: 72, gossamerFeatherX: 20, gossamerFeatherY: 15,
     fadeStart: 40, fadeReach: 70, fadeFloor: 8,
@@ -313,8 +314,9 @@ console.log('TRINFINITY LOADING');
     { key:'portraitScale', label:'Portrait Size', min:50, max:200, step:5, unit:'%', varName:'--tf-portrait-scale', format:v=>v+'%' },
   ];
 
-  function renderSliders(style) {
-    const container = document.getElementById('tf-style-sliders');
+  function renderSliders(style, idPrefix) {
+    idPrefix = idPrefix || 'tf';
+    const container = document.getElementById(idPrefix + '-style-sliders');
     if (!container) return;
     const styleDefs = TF_SLIDER_DEFS[style] || [];
     const allDefs   = [...styleDefs, ...TF_GLOBAL_SLIDERS];
@@ -324,9 +326,9 @@ console.log('TRINFINITY LOADING');
     if (style === 'pulse') {
       html += `<div class="tf-row" style="margin-bottom:8px">
         <span class="tf-slider-label">Pulse Colour</span>
-        <div id="tf-pulse-swatch" style="width:40px;height:18px;border-radius:3px;border:1px solid rgba(255,255,255,0.15);background:rgb(${cfg.pulseR},${cfg.pulseG},${cfg.pulseB})"></div>
+        <div id="${idPrefix}-pulse-swatch" style="width:40px;height:18px;border-radius:3px;border:1px solid rgba(255,255,255,0.15);background:rgb(${cfg.pulseR},${cfg.pulseG},${cfg.pulseB})"></div>
         <label class="tf-row" style="gap:4px;font-size:11px;color:var(--tf-text-muted)">
-          <input type="checkbox" id="tf-pulse-auto" ${cfg.pulseAuto ? 'checked' : ''}/> Auto
+          <input type="checkbox" id="${idPrefix}-pulse-auto" ${cfg.pulseAuto ? 'checked' : ''}/> Auto
         </label></div>`;
     }
 
@@ -335,12 +337,12 @@ console.log('TRINFINITY LOADING');
       html += `<div class="tf-row" style="margin-bottom:8px">
         <span class="tf-slider-label">${def.label}</span>
         <input type="range" class="tf-slider" data-key="${def.key}" data-var="${def.varName}" min="${def.min}" max="${def.max}" step="${def.step}" value="${val}"/>
-        <span class="tf-slider-val" id="tfv-${def.key}">${val}${def.unit}</span></div>`;
+        <span class="tf-slider-val" id="${idPrefix}v-${def.key}">${val}${def.unit}</span></div>`;
     });
 
     container.innerHTML = html;
 
-    const autoCheck = container.querySelector('#tf-pulse-auto');
+    const autoCheck = container.querySelector('#' + idPrefix + '-pulse-auto');
     if (autoCheck) autoCheck.addEventListener('change', function() { cfg.pulseAuto = this.checked; saveSettings(); });
 
     container.querySelectorAll('.tf-slider').forEach(slider => {
@@ -355,11 +357,18 @@ console.log('TRINFINITY LOADING');
           setVar('--tf-portrait-w', Math.round(120 * s) + 'px');
           setVar('--tf-portrait-h', Math.round(160 * s) + 'px');
         }
-        const valEl = document.getElementById('tfv-' + key);
-        if (valEl) valEl.textContent = raw + (def?.unit || '');
+        /* Update value display in both panels */
+        ['tf', 'tfd'].forEach(p => {
+          const valEl = document.getElementById(p + 'v-' + key);
+          if (valEl) valEl.textContent = raw + (def?.unit || '');
+          const sliderEl = document.querySelector(`#${p}-style-sliders [data-key="${key}"]`);
+          if (sliderEl) sliderEl.value = raw;
+        });
         if (['pulseR','pulseG','pulseB'].includes(key)) {
-          const swatch = document.getElementById('tf-pulse-swatch');
-          if (swatch) swatch.style.background = `rgb(${cfg.pulseR},${cfg.pulseG},${cfg.pulseB})`;
+          ['tf', 'tfd'].forEach(p => {
+            const swatch = document.getElementById(p + '-pulse-swatch');
+            if (swatch) swatch.style.background = `rgb(${cfg.pulseR},${cfg.pulseG},${cfg.pulseB})`;
+          });
         }
         saveSettings();
       });
@@ -380,13 +389,6 @@ console.log('TRINFINITY LOADING');
     </svg>`;
   }
 
-  function togglePanel() {
-    const panel = document.getElementById('trinfinity-panel');
-    if (!panel) return;
-    const isOpen = panel.classList.toggle('tf-open');
-    if (isOpen) positionPanel();
-  }
-
   function positionPanel() {
     const panel = document.getElementById('trinfinity-panel');
     const btn   = document.getElementById('trinfinity-btn');
@@ -395,10 +397,114 @@ console.log('TRINFINITY LOADING');
     panel.style.bottom = ((parseInt(btn.style.bottom) || 80) + 56) + 'px';
   }
 
-  function buildButton() {
-    const existing = document.getElementById('trinfinity-btn');
-    if (existing) existing.remove();
+  /* ── Shared settings HTML — used by both floating panel and drawer ── */
+  function buildSettingsHTML(idPrefix) {
+    const themeOptions = Object.entries(TF_THEME_DATA).map(([k,v]) => `<option value="${k}" ${cfg.theme===k?'selected':''}>${v.label}</option>`).join('');
+    const styleOptions = TF_STYLES.map(s => `<option value="${s}" ${cfg.style===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('');
+    const fontOptions  = Object.entries(TF_FONT_PAIRS).map(([k,v]) => `<option value="${k}" ${cfg.font===k?'selected':''}>${v.label}</option>`).join('');
+    const modeChecked  = getEffectiveMode() === 'button' ? 'checked' : '';
+    return `
+      <div class="tf-panel-section">
+        <span class="tf-section-label">Message Style</span>
+        <select class="tf-select" id="${idPrefix}-style-select">${styleOptions}</select>
+      </div>
+      <div class="tf-panel-section">
+        <span class="tf-section-label">Colour Theme</span>
+        <select class="tf-select" id="${idPrefix}-theme-select">${themeOptions}</select>
+      </div>
+      <div class="tf-panel-section">
+        <span class="tf-section-label">Font Pair</span>
+        <select class="tf-select" id="${idPrefix}-font-select">${fontOptions}</select>
+        <div id="${idPrefix}-custom-fonts" class="tf-custom-fonts" style="display:${cfg.font==='custom'?'flex':'none'}">
+          <input class="tf-input" id="${idPrefix}-font-display-input" placeholder="Display font (e.g. Playfair Display)" value="${cfg.customDisplayFont||''}"/>
+          <input class="tf-input" id="${idPrefix}-font-body-input" placeholder="Body font (e.g. Lora)" value="${cfg.customBodyFont||''}"/>
+          <button class="tf-btn-small" id="${idPrefix}-font-load-btn">Load Fonts ↗</button>
+        </div>
+      </div>
+      <hr class="tf-divider"/>
+      <div class="tf-panel-section" id="${idPrefix}-style-sliders"></div>
+      <hr class="tf-divider"/>
+      <div class="tf-panel-section">
+        <span class="tf-section-label">Interface</span>
+        <label class="tf-row" style="gap:8px;font-size:12px;color:var(--tf-text-muted);cursor:pointer;">
+          <input type="checkbox" id="${idPrefix}-btn-toggle" ${modeChecked}/>
+          Show floating button
+        </label>
+      </div>
+      <hr class="tf-divider"/>
+      <div class="tf-panel-section tf-about">
+        <span>Trinfinity v${TF_VERSION}</span>
+        <span>by trinity (trinachronism)</span>
+        <a href="https://github.com/trinibots/trinfinity" target="_blank" rel="noopener">github.com/trinibots/trinfinity</a>
+      </div>`;
+  }
 
+  /* ── Wire all settings events for a given id prefix ── */
+  function wireSettings(idPrefix) {
+    const other = idPrefix === 'tf' ? 'tfd' : 'tf';
+
+    const styleEl = document.getElementById(idPrefix + '-style-select');
+    if (styleEl) styleEl.addEventListener('change', (e) => {
+      applyStyle(e.target.value);
+      const o = document.getElementById(other + '-style-select');
+      if (o) o.value = e.target.value;
+      renderSliders(e.target.value, idPrefix);
+      renderSliders(e.target.value, other);
+      saveSettings();
+    });
+
+    const themeEl = document.getElementById(idPrefix + '-theme-select');
+    if (themeEl) themeEl.addEventListener('change', (e) => {
+      applyTheme(e.target.value);
+      const o = document.getElementById(other + '-theme-select');
+      if (o) o.value = e.target.value;
+      saveSettings();
+    });
+
+    const fontEl = document.getElementById(idPrefix + '-font-select');
+    if (fontEl) fontEl.addEventListener('change', (e) => {
+      applyFont(e.target.value);
+      document.getElementById(idPrefix + '-custom-fonts').style.display = e.target.value === 'custom' ? 'flex' : 'none';
+      saveSettings();
+    });
+
+    const fontLoadBtn = document.getElementById(idPrefix + '-font-load-btn');
+    if (fontLoadBtn) fontLoadBtn.addEventListener('click', () => {
+      cfg.customDisplayFont = document.getElementById(idPrefix + '-font-display-input').value.trim();
+      cfg.customBodyFont    = document.getElementById(idPrefix + '-font-body-input').value.trim();
+      if (cfg.customDisplayFont) { loadGoogleFont(cfg.customDisplayFont); setVar('--tf-font-display', `'${cfg.customDisplayFont}', serif`); }
+      if (cfg.customBodyFont)    { loadGoogleFont(cfg.customBodyFont);    setVar('--tf-font-body',    `'${cfg.customBodyFont}', sans-serif`); }
+      saveSettings();
+    });
+
+    const btnToggle = document.getElementById(idPrefix + '-btn-toggle');
+    if (btnToggle) btnToggle.addEventListener('change', function() {
+      cfg.uiMode = this.checked ? 'button' : 'menu';
+      const o = document.getElementById(other + '-btn-toggle');
+      if (o) o.checked = this.checked;
+      if (cfg.uiMode === 'button') {
+        buildButton();
+        buildPanel();
+      } else {
+        document.getElementById('trinfinity-btn')?.remove();
+        document.getElementById('trinfinity-panel')?.remove();
+      }
+      saveSettings();
+    });
+
+    renderSliders(cfg.style, idPrefix);
+  }
+
+  /* ── Determine effective UI mode ── */
+  function getEffectiveMode() {
+    if (cfg.uiMode === 'button') return 'button';
+    if (cfg.uiMode === 'menu')   return 'menu';
+    return window.innerWidth >= 768 ? 'button' : 'menu';
+  }
+
+  /* ── Floating button ── */
+  function buildButton() {
+    document.getElementById('trinfinity-btn')?.remove();
     const btn = document.createElement('button');
     btn.id = 'trinfinity-btn';
     btn.title = 'Trinfinity';
@@ -424,14 +530,16 @@ console.log('TRINFINITY LOADING');
     document.body.appendChild(btn);
   }
 
+  function togglePanel() {
+    const panel = document.getElementById('trinfinity-panel');
+    if (!panel) return;
+    const isOpen = panel.classList.toggle('tf-open');
+    if (isOpen) positionPanel();
+  }
+
+  /* ── Floating panel ── */
   function buildPanel() {
-    const existing = document.getElementById('trinfinity-panel');
-    if (existing) existing.remove();
-
-    const themeOptions = Object.entries(TF_THEME_DATA).map(([k,v]) => `<option value="${k}" ${cfg.theme===k?'selected':''}>${v.label}</option>`).join('');
-    const styleOptions = TF_STYLES.map(s => `<option value="${s}" ${cfg.style===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('');
-    const fontOptions  = Object.entries(TF_FONT_PAIRS).map(([k,v]) => `<option value="${k}" ${cfg.font===k?'selected':''}>${v.label}</option>`).join('');
-
+    document.getElementById('trinfinity-panel')?.remove();
     const panel = document.createElement('div');
     panel.id = 'trinfinity-panel';
     panel.innerHTML = `
@@ -439,74 +547,52 @@ console.log('TRINFINITY LOADING');
         <span class="tf-panel-title">∞ Trinfinity</span>
         <button class="tf-panel-close" id="tf-close">✕</button>
       </div>
-      <div class="tf-panel-body">
-        <div class="tf-panel-section">
-          <span class="tf-section-label">Message Style</span>
-          <select class="tf-select" id="tf-style-select">${styleOptions}</select>
-        </div>
-        <div class="tf-panel-section">
-          <span class="tf-section-label">Colour Theme</span>
-          <select class="tf-select" id="tf-theme-select">${themeOptions}</select>
-        </div>
-        <div class="tf-panel-section">
-          <span class="tf-section-label">Font Pair</span>
-          <select class="tf-select" id="tf-font-select">${fontOptions}</select>
-          <div id="tf-custom-fonts" class="tf-custom-fonts" style="display:${cfg.font==='custom'?'flex':'none'}">
-            <input class="tf-input" id="tf-font-display-input" placeholder="Display font (e.g. Playfair Display)" value="${cfg.customDisplayFont||''}"/>
-            <input class="tf-input" id="tf-font-body-input" placeholder="Body font (e.g. Lora)" value="${cfg.customBodyFont||''}"/>
-            <button class="tf-btn-small" id="tf-font-load-btn">Load Fonts ↗</button>
-          </div>
-        </div>
-        <hr class="tf-divider"/>
-        <div class="tf-panel-section" id="tf-style-sliders"></div>
-        <hr class="tf-divider"/>
-        <div class="tf-panel-section tf-about">
-          <span>Trinfinity v${TF_VERSION}</span>
-          <span>by trinity (trinachronism)</span>
-          <a href="https://github.com/trinibots/trinfinity" target="_blank" rel="noopener">github.com/trinibots/trinfinity</a>
-        </div>
-      </div>`;
-
+      <div class="tf-panel-body">${buildSettingsHTML('tf')}</div>`;
     document.body.appendChild(panel);
     positionPanel();
-
     document.getElementById('tf-close').addEventListener('click', () => panel.classList.remove('tf-open'));
-    document.getElementById('tf-style-select').addEventListener('change', (e) => { applyStyle(e.target.value); renderSliders(e.target.value); saveSettings(); });
-    document.getElementById('tf-theme-select').addEventListener('change', (e) => { applyTheme(e.target.value); saveSettings(); });
-    document.getElementById('tf-font-select').addEventListener('change', (e) => {
-      applyFont(e.target.value);
-      document.getElementById('tf-custom-fonts').style.display = e.target.value === 'custom' ? 'flex' : 'none';
-      saveSettings();
-    });
-    document.getElementById('tf-font-load-btn').addEventListener('click', () => {
-      cfg.customDisplayFont = document.getElementById('tf-font-display-input').value.trim();
-      cfg.customBodyFont    = document.getElementById('tf-font-body-input').value.trim();
-      if (cfg.customDisplayFont) { loadGoogleFont(cfg.customDisplayFont); setVar('--tf-font-display', `'${cfg.customDisplayFont}', serif`); }
-      if (cfg.customBodyFont)    { loadGoogleFont(cfg.customBodyFont);    setVar('--tf-font-body',    `'${cfg.customBodyFont}', sans-serif`); }
-      saveSettings();
-    });
-
-    renderSliders(cfg.style);
+    wireSettings('tf');
   }
 
-  function addExtensionMenuEntry() {
-    function tryAdd() {
+  /* ── Extensions drawer block — always present ── */
+  function buildDrawerBlock() {
+    function tryBuild() {
       const menu = document.getElementById('extensionsMenu');
-      if (!menu || document.getElementById('tf-ext-btn')) return;
-      const btn = document.createElement('div');
-      btn.id = 'tf-ext-btn'; btn.className = 'tf-ext-menu-btn';
-      btn.textContent = '∞ Trinfinity';
-      btn.style.cssText = 'padding:8px 16px;cursor:pointer;color:var(--tf-accent-soft,#a78bfa);font-size:13px;';
-      btn.addEventListener('click', togglePanel);
-      menu.prepend(btn);
+      if (!menu || document.getElementById('tf-drawer-block')) return;
+
+      const block = document.createElement('div');
+      block.id = 'tf-drawer-block';
+
+      block.innerHTML = `
+        <div id="tf-drawer-header" style="
+          display:flex;align-items:center;justify-content:space-between;
+          padding:10px 16px;cursor:pointer;
+          border-bottom:1px solid var(--tf-accent-border-mid,rgba(139,92,246,0.18));
+          color:var(--tf-accent-soft,#a78bfa);
+          font-family:var(--tf-font-display,'Cinzel',serif);
+          font-size:11px;letter-spacing:0.14em;text-transform:uppercase;">
+          <span>∞ Trinfinity</span>
+          <span id="tf-drawer-chevron">▾</span>
+        </div>
+        <div id="tf-drawer-body" style="display:none;flex-direction:column;gap:14px;padding:14px 16px 18px;">
+          ${buildSettingsHTML('tfd')}
+        </div>`;
+
+      menu.prepend(block);
+
+      let open = false;
+      document.getElementById('tf-drawer-header').addEventListener('click', () => {
+        open = !open;
+        document.getElementById('tf-drawer-body').style.display = open ? 'flex' : 'none';
+        document.getElementById('tf-drawer-chevron').textContent = open ? '▴' : '▾';
+      });
+
+      wireSettings('tfd');
     }
 
-    /* Try immediately, then watch for menu to appear */
-    tryAdd();
-    const observer = new MutationObserver(() => tryAdd());
+    tryBuild();
+    const observer = new MutationObserver(() => tryBuild());
     observer.observe(document.body, { childList: true, subtree: true });
-
-    /* Stop watching after 30s */
     setTimeout(() => observer.disconnect(), 30000);
   }
 
@@ -523,13 +609,14 @@ console.log('TRINFINITY LOADING');
 
     function ready() {
       applyStyle(cfg.style);
-      buildButton();
-      buildPanel();
-      addExtensionMenuEntry();
+      buildDrawerBlock();
+      if (getEffectiveMode() === 'button') {
+        buildButton();
+        buildPanel();
+      }
       setTimeout(startAvatarObserver, 900);
     }
 
-    /* Use setTimeout(0) to guarantee body exists regardless of module load timing */
     if (document.body) {
       setTimeout(ready, 500);
     } else {
