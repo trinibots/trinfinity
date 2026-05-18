@@ -464,30 +464,46 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   mask-image: linear-gradient(
       to bottom,
       transparent 0%,
+      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-y) * 0.4),
+      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-y) * 0.7),
       black var(--tf-gossamer-feather-y),
       black calc(100% - var(--tf-gossamer-feather-y)),
+      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-y) * 0.7),
+      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-y) * 0.4),
       transparent 100%
     ),
     linear-gradient(
       to right,
       transparent 0%,
+      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-x) * 0.4),
+      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-x) * 0.7),
       black var(--tf-gossamer-feather-x),
       black calc(100% - var(--tf-gossamer-feather-x)),
+      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-x) * 0.7),
+      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-x) * 0.4),
       transparent 100%
     ) !important;
   mask-composite: intersect !important;
   -webkit-mask-image: linear-gradient(
       to bottom,
       transparent 0%,
+      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-y) * 0.4),
+      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-y) * 0.7),
       black var(--tf-gossamer-feather-y),
       black calc(100% - var(--tf-gossamer-feather-y)),
+      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-y) * 0.7),
+      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-y) * 0.4),
       transparent 100%
     ),
     linear-gradient(
       to right,
       transparent 0%,
+      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-x) * 0.4),
+      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-x) * 0.7),
       black var(--tf-gossamer-feather-x),
       black calc(100% - var(--tf-gossamer-feather-x)),
+      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-x) * 0.7),
+      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-x) * 0.4),
       transparent 100%
     ) !important;
   -webkit-mask-composite: source-in !important;
