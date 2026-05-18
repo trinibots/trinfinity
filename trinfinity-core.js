@@ -3,13 +3,13 @@
    Monolithic build — all modules inlined
    by trinity (trinachronism)
    https://github.com/trinibots/trinfinity
-   v0.3.1c
+   v0.3.1
    ============================================================ */
 
 (function () {
   'use strict';
 
-  const TF_VERSION = '0.3.1';
+  const TF_VERSION = '0.3.1d';
   const TF_KEY     = 'trinfinity_settings';
   const TF_STYLES  = ['gossamer', 'fade', 'pulse', 'ebb', 'flow', 'void', 'loom'];
 
@@ -224,20 +224,6 @@
     wrapper.classList.add('tf-avatar-wrapper');
     wrapper.innerHTML = '';
     wrapper.appendChild(portrait);
-
-    const isUser = mes.getAttribute('is_user') === 'true';
-    const allMes = Array.from(document.querySelectorAll('#chat .mes'));
-    const idx = allMes.indexOf(mes);
-    const ghosts = [];
-    for (let i = idx - 1; i >= 0 && ghosts.length < 2; i--) {
-      const prev = allMes[i];
-      if (prev.getAttribute('is_user') !== String(isUser)) continue;
-      const prevWrapper = prev.querySelector('.mesAvatarWrapper');
-      const prevImg = prevWrapper?.querySelector('img');
-      const prevUrl = prev.dataset.tfAvatar || prev.dataset.avatarOriginal || prev.dataset.avatarThumb || prev.dataset.avatar || prevImg?.src || '';
-      if (prevUrl) ghosts.push(prevUrl);
-    }
-    ghosts.forEach(url => wrapper.appendChild(tfMakePortrait(url, w, h, false)));
   }
 
   function enhanceAllMessages() {
