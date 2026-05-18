@@ -506,16 +506,20 @@
     applyTheme(cfg.theme);
     applyFont(cfg.font);
 
-    const ready = () => {
+    function ready() {
       applyStyle(cfg.style);
       buildButton();
       buildPanel();
       addExtensionMenuEntry();
       setTimeout(startAvatarObserver, 900);
-    };
+    }
 
-    if (document.body) ready();
-    else document.addEventListener('DOMContentLoaded', ready);
+    /* Use setTimeout(0) to guarantee body exists regardless of module load timing */
+    if (document.body) {
+      setTimeout(ready, 0);
+    } else {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(ready, 0));
+    }
   }
 
   init();
