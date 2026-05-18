@@ -192,6 +192,8 @@ console.log('TRINFINITY LOADING');
       .replace(/thumbnail\?type=persona&file=/, 'characters/')
       .replace(/thumbnail\?type=avatar&file=/, 'characters/');
   }
+
+  function tfMakePortrait(avatarUrl, w, h, isMain) {
     const portrait = document.createElement('div');
     portrait.className = isMain ? 'tf-portrait' : 'tf-portrait tf-portrait-ghost';
     const img = document.createElement('img');
