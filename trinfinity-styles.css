@@ -67,8 +67,8 @@
   /* Gossamer */
   --tf-gossamer-blur:     10px;
   --tf-gossamer-opacity:  0.72;
-  --tf-gossamer-feather-x:  20%;
-  --tf-gossamer-feather-y:  15%;
+  --tf-gossamer-feather-x:  20px;
+  --tf-gossamer-feather-y:  15px;
 
   /* Fade */
   --tf-fade-start:        40%;
@@ -461,53 +461,23 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   opacity: var(--tf-gossamer-opacity) !important;
   object-position: top center !important;
   transform: scale(1.08) !important;
-  mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-y) * 0.4),
-      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-y) * 0.7),
-      black var(--tf-gossamer-feather-y),
-      black calc(100% - var(--tf-gossamer-feather-y)),
-      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-y) * 0.7),
-      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-y) * 0.4),
-      transparent 100%
-    ),
-    linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-x) * 0.4),
-      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-x) * 0.7),
-      black var(--tf-gossamer-feather-x),
-      black calc(100% - var(--tf-gossamer-feather-x)),
-      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-x) * 0.7),
-      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-x) * 0.4),
-      transparent 100%
-    ) !important;
-  mask-composite: intersect !important;
-  -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-y) * 0.4),
-      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-y) * 0.7),
-      black var(--tf-gossamer-feather-y),
-      black calc(100% - var(--tf-gossamer-feather-y)),
-      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-y) * 0.7),
-      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-y) * 0.4),
-      transparent 100%
-    ),
-    linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(0,0,0,0.2) calc(var(--tf-gossamer-feather-x) * 0.4),
-      rgba(0,0,0,0.6) calc(var(--tf-gossamer-feather-x) * 0.7),
-      black var(--tf-gossamer-feather-x),
-      black calc(100% - var(--tf-gossamer-feather-x)),
-      rgba(0,0,0,0.6) calc(100% - var(--tf-gossamer-feather-x) * 0.7),
-      rgba(0,0,0,0.2) calc(100% - var(--tf-gossamer-feather-x) * 0.4),
-      transparent 100%
-    ) !important;
-  -webkit-mask-composite: source-in !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
   transition: filter 0.6s ease, opacity 0.6s ease !important;
+}
+
+/* Inset shadow overlay creates soft organic edge fade */
+[data-tf-style="gossamer"] .tf-portrait::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  box-shadow:
+    inset calc(var(--tf-gossamer-feather-x) * 2) 0 calc(var(--tf-gossamer-feather-x) * 3) calc(var(--tf-gossamer-feather-x) * -1) var(--tf-bg-deep),
+    inset calc(var(--tf-gossamer-feather-x) * -2) 0 calc(var(--tf-gossamer-feather-x) * 3) calc(var(--tf-gossamer-feather-x) * -1) var(--tf-bg-deep),
+    inset 0 calc(var(--tf-gossamer-feather-y) * 2) calc(var(--tf-gossamer-feather-y) * 3) calc(var(--tf-gossamer-feather-y) * -1) var(--tf-bg-deep),
+    inset 0 calc(var(--tf-gossamer-feather-y) * -2) calc(var(--tf-gossamer-feather-y) * 3) calc(var(--tf-gossamer-feather-y) * -1) var(--tf-bg-deep) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
 }
 
 [data-tf-style="gossamer"] .mes:hover .tf-portrait-img {
