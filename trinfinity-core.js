@@ -7,6 +7,7 @@
    ============================================================ */
 
 'use strict';
+console.log('TRINFINITY LOADING');
 
   const TF_VERSION = '0.3.1d';
   const TF_KEY     = 'trinfinity_settings';
