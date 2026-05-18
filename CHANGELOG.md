@@ -2,18 +2,31 @@
 by trinity (trinachronism)
 https://github.com/trinibots/trinfinity
 
-## Versioning
-```
-x.y.z
-  x = public release (0 = pre-release)
-  y = stage number
-  z = save iteration within stage (resets on new stage)
-  letters = hotfix rollback within a save (v0.3.0a, v0.3.0b...)
-```
+---
+
+## v0.3.1e — CSS: Gossamer portrait, Pulse fix, Ebb fix
+**Files:** trinfinity-styles.css
+
+### Changed
+- **Gossamer portrait** — full rewrite of portrait treatment
+  - Blur applied directly to image (`filter: blur()`) for gauzy softness
+  - Opacity controlled by opacity slider
+  - Radial dissolve mask anchored at 40% 30% (upper-left) so face stays clear, edges melt away
+  - `transform: scale(1.08)` to hide blur fringe at portrait edges
+  - Hover clarifies portrait slightly (blur halves, opacity +0.15)
+  - Portrait stats faded to 50% opacity
+  - User side mirrors dissolve anchor to 60% 30%
+
+### Fixed
+- **Pulse** — removed `animation: tf-pulse-breathe` from `.tf-portrait` container;
+  breathe animation now only on `::before` bar element as intended
+- **Ebb** — portrait `filter` now uses `saturate(var(--tf-ebb-saturate))` instead of
+  broken `saturate(calc(1 - var(--tf-ebb-desaturate) / 100))`
+- Added `--tf-ebb-saturate: 0.40` default to `:root` so desaturation works before JS sets it
 
 ---
 
-## v0.3.1d — Hotfix: Remove ghost portrait stack
+
 **Files:** trinfinity-core.js
 
 ### Fixed
