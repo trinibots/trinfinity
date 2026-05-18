@@ -450,6 +450,10 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 
 /* ── GOSSAMER — soft, gauzy, uniform blur and opacity ── */
 
+[data-tf-style="gossamer"] .mesAvatarWrapper {
+  background: transparent !important;
+}
+
 [data-tf-style="gossamer"] .tf-portrait {
   border-radius: 0 !important;
   overflow: visible !important;
@@ -462,14 +466,16 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   object-position: top center !important;
   transform: scale(1.08) !important;
   mask-image: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    black var(--tf-gossamer-feather-x),
-    transparent calc(var(--tf-gossamer-feather-x) + 40%)
+    ellipse 80% 90% at 50% 40%,
+    black 0%,
+    black calc(50% - var(--tf-gossamer-feather-x)),
+    transparent calc(50% + var(--tf-gossamer-feather-x))
   ) !important;
   -webkit-mask-image: radial-gradient(
-    ellipse 80% 80% at 50% 50%,
-    black var(--tf-gossamer-feather-x),
-    transparent calc(var(--tf-gossamer-feather-x) + 40%)
+    ellipse 80% 90% at 50% 40%,
+    black 0%,
+    black calc(50% - var(--tf-gossamer-feather-x)),
+    transparent calc(50% + var(--tf-gossamer-feather-x))
   ) !important;
   transition: filter 0.6s ease, opacity 0.6s ease !important;
 }
