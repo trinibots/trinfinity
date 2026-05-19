@@ -582,6 +582,21 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   padding: 4px 14px 14px !important;
 }
 
+/* Stats row above character name */
+.tf-fade-stats-row {
+  padding: 4px 14px 0 !important;
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.tf-fade-stats-row .tf-stat {
+  font-size: 10px !important;
+  opacity: 0.60 !important;
+  color: var(--tf-text-muted) !important;
+  font-family: 'Calibri', sans-serif !important;
+}
+
 /* Stats inline with name */
 [data-tf-style="fade"] .tf-stat {
   display: inline-block !important;
