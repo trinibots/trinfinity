@@ -236,6 +236,16 @@ console.log('TRINFINITY LOADING');
     /* Fade uses CSS ::before with avatar URL set as inline CSS variable */
     if (cfg.style === 'fade') {
       mes.style.setProperty('--mes-avatar-url', `url("${avatarUrl}")`);
+      /* Move stats from hidden wrapper into ch_name */
+      const chName = mes.querySelector('.ch_name');
+      const mesId  = wrapper.querySelector('.mesIDDisplay');
+      const timer  = wrapper.querySelector('.mes_timer');
+      const tokens = wrapper.querySelector('.tokenCounterDisplay');
+      if (chName) {
+        if (mesId)  { mesId.className  += ' tf-stat'; chName.appendChild(mesId); }
+        if (timer)  { timer.className  += ' tf-stat'; chName.appendChild(timer); }
+        if (tokens) { tokens.className += ' tf-stat'; chName.appendChild(tokens); }
+      }
       return;
     }
 
