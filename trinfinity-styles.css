@@ -577,17 +577,19 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   background: linear-gradient(to bottom, transparent, var(--tf-bg-user) 80%) !important;
 }
 
-/* Text body */
+/* Text body — extra top padding for breathing room */
 [data-tf-style="fade"] .mes_text {
-  padding: 4px 14px 14px !important;
+  padding: 16px 14px 14px !important;
 }
 
 /* Stats row above character name */
 .tf-fade-stats-row {
-  padding: 4px 14px 0 !important;
+  padding: 4px 14px 4px !important;
   display: flex !important;
   gap: 8px !important;
   align-items: center !important;
+  border-bottom: 1px solid var(--tf-accent-border-sub) !important;
+  margin-bottom: 4px !important;
 }
 
 .tf-fade-stats-row .tf-stat {
