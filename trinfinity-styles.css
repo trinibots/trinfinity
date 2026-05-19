@@ -519,8 +519,28 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   box-shadow: none !important;
   padding: 0 !important;
   position: relative !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   border-radius: 8px !important;
+}
+
+/* Clip just the ::before banner image */
+[data-tf-style="fade"] .mes_block::before {
+  border-radius: 8px 8px 0 0 !important;
+  overflow: hidden !important;
+}
+
+/* Action buttons — semi-transparent pill */
+[data-tf-style="fade"] .mes_buttons {
+  position: absolute !important;
+  top: 6px !important;
+  right: 8px !important;
+  z-index: 3 !important;
+  background: rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border-radius: 20px !important;
+  padding: 2px 6px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
 }
 
 /* Portrait banner — top of the message card */
@@ -562,18 +582,14 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   padding: 4px 14px 14px !important;
 }
 
-/* Action buttons — semi-transparent pill */
-[data-tf-style="fade"] .mes_buttons {
-  position: absolute !important;
-  top: 6px !important;
-  right: 8px !important;
-  z-index: 3 !important;
-  background: rgba(0,0,0,0.45) !important;
-  backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
-  border-radius: 20px !important;
-  padding: 2px 6px !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
+/* Stats inline with name */
+[data-tf-style="fade"] .tf-stat {
+  display: inline-block !important;
+  font-size: 10px !important;
+  opacity: 0.65 !important;
+  color: var(--tf-text-muted) !important;
+  margin-left: 6px !important;
+  vertical-align: middle !important;
 }
 
 
