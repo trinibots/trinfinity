@@ -74,15 +74,12 @@ console.log('TRINFINITY LOADING');
 
   /* ── Style ── */
   function applyStyle(style) {
-    const prevStyle = cfg.style;
     const chat = document.getElementById('chat');
     if (chat) chat.setAttribute('data-tf-style', style);
     cfg.style = style;
-    /* If switching to or from fade, re-enhance all messages */
-    if (style === 'fade' || prevStyle === 'fade') {
-      /* Remove existing fade banners */
+    /* Re-enhance if switching to/from fade since injection type changes */
+    if (style === 'fade' || cfg.style === 'fade') {
       document.querySelectorAll('.tf-fade-banner').forEach(b => b.remove());
-      /* Reset enhanced state so messages get re-processed */
       document.querySelectorAll('#chat .mes').forEach(m => tf_enhanced.delete(m));
       setTimeout(enhanceAllMessages, 100);
     }
@@ -231,15 +228,11 @@ console.log('TRINFINITY LOADING');
     mes.dataset.tfAvatar = avatarUrl;
     tf_enhanced.add(mes);
 
-    if (cfg.style === 'fade') {
-      /* Remove any sidebar portrait that may exist */
-      wrapper.innerHTML = '';
-      injectFadeBanner(mes, avatarUrl);
-    } else {
-      /* Remove any fade banner that may exist */
-      mes.querySelector('.tf-fade-banner')?.remove();
-      injectSidebarPortrait(mes, avatarUrl, wrapper);
-    }
+    /* Fade uses CSS ::before with ST's native --mes-avatar-url — no sidebar portrait needed */
+    if (cfg.style === 'fade') return;
+
+    /* All other styles — sidebar portrait */
+    injectSidebarPortrait(mes, avatarUrl, wrapper);
   }
 
   function injectFadeBanner(mes, avatarUrl) {
