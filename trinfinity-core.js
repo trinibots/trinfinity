@@ -368,7 +368,7 @@ console.log('TRINFINITY LOADING');
   };
 
   const TF_GLOBAL_SLIDERS = [
-    { key:'portraitScale', label:'Portrait Size', min:50, max:200, step:5, unit:'%', varName:'--tf-portrait-scale', format:v=>v+'%' },
+    { key:'portraitScale', label:'Portrait Size', min:50, max:200, step:5, unit:'%', varName:'--tf-portrait-scale', format:v=>v+'%', hideFor:['fade'] },
   ];
 
   function renderSliders(style, idPrefix) {
@@ -376,7 +376,7 @@ console.log('TRINFINITY LOADING');
     const container = document.getElementById(idPrefix + '-style-sliders');
     if (!container) return;
     const styleDefs = TF_SLIDER_DEFS[style] || [];
-    const allDefs   = [...styleDefs, ...TF_GLOBAL_SLIDERS];
+    const allDefs   = [...styleDefs, ...TF_GLOBAL_SLIDERS].filter(d => !d.hideFor?.includes(style));
     const label = style.charAt(0).toUpperCase() + style.slice(1);
     let html = `<span class="tf-section-label">${label} Settings</span>`;
 
