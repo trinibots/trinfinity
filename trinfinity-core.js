@@ -275,8 +275,7 @@ console.log('TRINFINITY LOADING');
     gossamer: [
       { key:'gossamerBlur',     label:'Blur',          min:0,  max:24, step:1, unit:'px', varName:'--tf-gossamer-blur',      format:v=>v+'px' },
       { key:'gossamerOpacity',  label:'Opacity',       min:0,  max:95, step:1, unit:'%',  varName:'--tf-gossamer-opacity',   format:v=>(v/100).toFixed(2) },
-      { key:'gossamerFeatherX', label:'Feather X',     min:0,  max:45, step:1, unit:'%',  varName:'--tf-gossamer-feather-x', format:v=>v+'%' },
-      { key:'gossamerFeatherY', label:'Feather Y',     min:0,  max:45, step:1, unit:'%',  varName:'--tf-gossamer-feather-y', format:v=>v+'%' },
+      { key:'gossamerFeatherX', label:'Avatar Feather',min:0,  max:45, step:1, unit:'%',  varName:'--tf-gossamer-feather-x', format:v=>v+'%' },
     ],
     fade: [
       { key:'fadeStart', label:'Fade Start',    min:0,  max:90,  step:1, unit:'%', varName:'--tf-fade-start',  format:v=>v+'%' },
