@@ -505,7 +505,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   background: var(--tf-bg-surface) !important;
   border: 1px solid var(--tf-accent-border-sub) !important;
   margin-bottom: 6px !important;
-  overflow: hidden !important;
+  overflow: visible !important;
 }
 
 [data-tf-style="fade"] .mes[is_user="true"] {
@@ -519,6 +519,8 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   box-shadow: none !important;
   padding: 0 !important;
   position: relative !important;
+  overflow: hidden !important;
+  border-radius: 8px !important;
 }
 
 /* Portrait banner — top of the message card */
