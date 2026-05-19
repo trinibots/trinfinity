@@ -490,9 +490,9 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   position: relative !important;
 }
 
-/* ── FADE — full-width portrait banner, melts into card ── */
+/* ── FADE — top banner portrait using ST's native --mes-avatar-url ── */
 
-/* Hide the sidebar portrait wrapper for Fade */
+/* Hide sidebar portrait — not needed for Fade */
 [data-tf-style="fade"] .mesAvatarWrapper {
   display: none !important;
 }
@@ -501,107 +501,58 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 [data-tf-style="fade"] .mes {
   display: block !important;
   position: relative !important;
-  overflow: hidden !important;
   border-radius: 8px !important;
   background: var(--tf-bg-surface) !important;
   border: 1px solid var(--tf-accent-border-sub) !important;
-  margin-bottom: 4px !important;
+  margin-bottom: 6px !important;
+  overflow: hidden !important;
 }
 
 [data-tf-style="fade"] .mes[is_user="true"] {
   background: var(--tf-bg-user) !important;
 }
 
-/* Banner container — injected by JS */
-.tf-fade-banner {
-  width: 100% !important;
-  height: var(--tf-fade-banner-h, 200px) !important;
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.tf-fade-banner-img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center var(--tf-fade-pos, 20%) !important;
-  display: block !important;
-  transition: object-position 0.3s ease !important;
-}
-
-/* Bottom fade — melts portrait into card */
-.tf-fade-banner::after {
-  content: '' !important;
-  position: absolute !important;
-  inset: 0 !important;
-  background: linear-gradient(
-    to bottom,
-    transparent var(--tf-fade-start),
-    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
-    var(--tf-bg-surface) 100%
-  ) !important;
-  pointer-events: none !important;
-}
-
-[data-tf-style="fade"] .mes[is_user="true"] .tf-fade-banner::after {
-  background: linear-gradient(
-    to bottom,
-    transparent var(--tf-fade-start),
-    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
-    var(--tf-bg-user) 100%
-  ) !important;
-}
-
-/* Thumbnail + name overlay on banner */
-.tf-fade-overlay {
-  position: absolute !important;
-  bottom: 10px !important;
-  left: 12px !important;
-  display: flex !important;
-  align-items: flex-end !important;
-  gap: 10px !important;
-  z-index: 2 !important;
-}
-
-.tf-fade-thumb {
-  width: 52px !important;
-  height: 52px !important;
-  border-radius: 4px !important;
-  object-fit: cover !important;
-  object-position: top center !important;
-  border: 1px solid rgba(255,255,255,0.15) !important;
-  flex-shrink: 0 !important;
-}
-
-.tf-fade-meta {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 2px !important;
-}
-
-.tf-fade-name {
-  font-family: var(--tf-font-display) !important;
-  font-size: var(--tf-font-display-size) !important;
-  letter-spacing: var(--tf-font-display-ls) !important;
-  text-transform: uppercase !important;
-  color: var(--tf-text) !important;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.8) !important;
-}
-
-.tf-fade-stats {
-  font-size: 10px !important;
-  color: rgba(255,255,255,0.65) !important;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.9) !important;
-}
-
-/* Message body */
+/* mes_block holds the banner via ::before */
 [data-tf-style="fade"] .mes_block {
   background: transparent !important;
   border: none !important;
-  padding: 8px 14px 14px !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  position: relative !important;
 }
 
-/* Move action buttons to after the banner */
+/* Portrait banner — top of the message card */
+[data-tf-style="fade"] .mes_block::before {
+  content: '' !important;
+  display: block !important;
+  width: 100% !important;
+  height: var(--tf-fade-banner-h, 200px) !important;
+  background: var(--mes-avatar-original-url, var(--mes-avatar-url)) center var(--tf-fade-pos, 20%) / cover no-repeat !important;
+  mask-image: linear-gradient(
+    to bottom,
+    black var(--tf-fade-start),
+    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
+    transparent 100%
+  ) !important;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black var(--tf-fade-start),
+    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
+    transparent 100%
+  ) !important;
+}
+
+/* Name + meta sits between banner and text */
+[data-tf-style="fade"] .ch_name {
+  padding: 6px 14px 4px !important;
+}
+
+/* Text body */
+[data-tf-style="fade"] .mes_text {
+  padding: 4px 14px 14px !important;
+}
+
+/* Action buttons */
 [data-tf-style="fade"] .mes_buttons {
   position: absolute !important;
   top: 6px !important;
