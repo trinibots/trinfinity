@@ -22,7 +22,7 @@ console.log('TRINFINITY LOADING');
     uiMode: 'auto', /* 'button' | 'menu' | 'auto' */
     portraitW: 120, portraitH: 160, portraitScale: 100,
     gossamerBlur: 10, gossamerOpacity: 72, gossamerFeatherX: 20,
-    fadeStart: 40, fadeReach: 70, fadeFloor: 8,
+    fadeStart: 40, fadeReach: 70, fadeFloor: 8, fadeBannerH: 200, fadePos: 20,
     pulseSpeed: 2.4, pulseIntensity: 70, pulseRadius: 8,
     pulseR: 139, pulseG: 92, pulseB: 246, pulseAuto: true,
     ebbOpacity: 45, ebbDesaturate: 60,
@@ -52,6 +52,8 @@ console.log('TRINFINITY LOADING');
     setVar('--tf-fade-start',           cfg.fadeStart + '%');
     setVar('--tf-fade-reach',           cfg.fadeReach + '%');
     setVar('--tf-fade-floor',           (cfg.fadeFloor / 100).toFixed(2));
+    setVar('--tf-fade-banner-h',        cfg.fadeBannerH + 'px');
+    setVar('--tf-fade-pos',             cfg.fadePos + '%');
     setVar('--tf-pulse-speed',          parseFloat(cfg.pulseSpeed).toFixed(1) + 's');
     setVar('--tf-pulse-intensity',      (cfg.pulseIntensity / 100).toFixed(2));
     setVar('--tf-pulse-radius',         cfg.pulseRadius + 'px');
@@ -72,9 +74,18 @@ console.log('TRINFINITY LOADING');
 
   /* ── Style ── */
   function applyStyle(style) {
+    const prevStyle = cfg.style;
     const chat = document.getElementById('chat');
     if (chat) chat.setAttribute('data-tf-style', style);
     cfg.style = style;
+    /* If switching to or from fade, re-enhance all messages */
+    if (style === 'fade' || prevStyle === 'fade') {
+      /* Remove existing fade banners */
+      document.querySelectorAll('.tf-fade-banner').forEach(b => b.remove());
+      /* Reset enhanced state so messages get re-processed */
+      document.querySelectorAll('#chat .mes').forEach(m => tf_enhanced.delete(m));
+      setTimeout(enhanceAllMessages, 100);
+    }
   }
 
 
@@ -214,16 +225,60 @@ console.log('TRINFINITY LOADING');
     if (tf_enhanced.has(mes)) return;
     const wrapper = mes.querySelector('.mesAvatarWrapper');
     if (!wrapper) return;
-    /* Read URL before we replace the img, then cache it */
     const existingImg = wrapper.querySelector('img');
     const avatarUrl = toFullAvatarUrl(mes.dataset.tfAvatar || mes.dataset.avatarOriginal || mes.dataset.avatarThumb || mes.dataset.avatar || existingImg?.src || '');
     if (!avatarUrl) return;
-    mes.dataset.tfAvatar = avatarUrl; /* cache for ghost lookups */
+    mes.dataset.tfAvatar = avatarUrl;
     tf_enhanced.add(mes);
 
-    const mesId  = wrapper.querySelector('.mesIDDisplay');
-    const timer  = wrapper.querySelector('.mes_timer');
-    const tokens = wrapper.querySelector('.tokenCounterDisplay');
+    /* ── FADE — inject banner above mes_block ── */
+    if (cfg.style === 'fade') {
+      injectFadeBanner(mes, avatarUrl);
+      return;
+    }
+
+    /* ── All other styles — sidebar portrait ── */
+    injectSidebarPortrait(mes, avatarUrl, wrapper);
+  }
+
+  function injectFadeBanner(mes, avatarUrl) {
+    if (mes.querySelector('.tf-fade-banner')) return;
+
+    const mesBlock = mes.querySelector('.mes_block');
+    if (!mesBlock) return;
+
+    /* Get name and stats */
+    const nameEl  = mes.querySelector('.name_text');
+    const dateEl  = mes.querySelector('.mes_date');
+    const mesId   = mes.querySelector('.mesIDDisplay');
+    const tokens  = mes.querySelector('.tokenCounterDisplay');
+
+    const name    = nameEl?.textContent  || '';
+    const date    = dateEl?.textContent  || '';
+    const id      = mesId?.textContent   || '';
+    const tok     = tokens?.textContent  || '';
+    const stats   = [id, tok].filter(Boolean).join('  ·  ');
+
+    const banner = document.createElement('div');
+    banner.className = 'tf-fade-banner';
+    banner.innerHTML = `
+      <img class="tf-fade-banner-img" src="${avatarUrl}" alt="" draggable="false"/>
+      <div class="tf-fade-overlay">
+        <img class="tf-fade-thumb" src="${avatarUrl}" alt="" draggable="false"/>
+        <div class="tf-fade-meta">
+          ${stats ? `<div class="tf-fade-stats">${stats}</div>` : ''}
+          <div class="tf-fade-name">${name}</div>
+          ${date ? `<div class="tf-fade-stats">${date}</div>` : ''}
+        </div>
+      </div>`;
+
+    mes.insertBefore(banner, mesBlock);
+  }
+
+  function injectSidebarPortrait(mes, avatarUrl, wrapper) {
+    const mesId    = wrapper.querySelector('.mesIDDisplay');
+    const timer    = wrapper.querySelector('.mes_timer');
+    const tokens   = wrapper.querySelector('.tokenCounterDisplay');
     const oldThumb = wrapper.querySelector('.avatar');
     const w = cfg.portraitW || 120, h = cfg.portraitH || 160;
 
@@ -277,9 +332,11 @@ console.log('TRINFINITY LOADING');
       { key:'gossamerFeatherX', label:'Avatar Feather',min:0,  max:45, step:1, unit:'%',  varName:'--tf-gossamer-feather-x', format:v=>v+'%' },
     ],
     fade: [
-      { key:'fadeStart', label:'Fade Start',    min:0,  max:90,  step:1, unit:'%', varName:'--tf-fade-start',  format:v=>v+'%' },
-      { key:'fadeReach', label:'Fade Reach',    min:10, max:100, step:1, unit:'%', varName:'--tf-fade-reach',  format:v=>v+'%' },
-      { key:'fadeFloor', label:'Floor Opacity', min:0,  max:50,  step:1, unit:'%', varName:'--tf-fade-floor',  format:v=>(v/100).toFixed(2) },
+      { key:'fadeStart',    label:'Fade Start',    min:0,   max:80,  step:1,  unit:'%',  varName:'--tf-fade-start',     format:v=>v+'%' },
+      { key:'fadeReach',    label:'Fade Reach',    min:10,  max:100, step:1,  unit:'%',  varName:'--tf-fade-reach',     format:v=>v+'%' },
+      { key:'fadeFloor',    label:'Floor Opacity', min:0,   max:50,  step:1,  unit:'%',  varName:'--tf-fade-floor',     format:v=>(v/100).toFixed(2) },
+      { key:'fadeBannerH',  label:'Banner Height', min:100, max:400, step:10, unit:'px', varName:'--tf-fade-banner-h',  format:v=>v+'px' },
+      { key:'fadePos',      label:'Image Position',min:0,   max:100, step:1,  unit:'%',  varName:'--tf-fade-pos',       format:v=>v+'%' },
     ],
     pulse: [
       { key:'pulseSpeed',     label:'Beat Speed', min:0.5, max:8,   step:0.1, unit:'s',  varName:'--tf-pulse-speed',     format:v=>parseFloat(v).toFixed(1)+'s' },
@@ -354,6 +411,11 @@ console.log('TRINFINITY LOADING');
           const s = raw / 100;
           setVar('--tf-portrait-w', Math.round(120 * s) + 'px');
           setVar('--tf-portrait-h', Math.round(160 * s) + 'px');
+        }
+        if (key === 'fadePos') {
+          document.querySelectorAll('.tf-fade-banner-img').forEach(img => {
+            img.style.objectPosition = `center ${raw}%`;
+          });
         }
         /* Update value display in both panels */
         ['tf', 'tfd'].forEach(p => {
