@@ -231,14 +231,15 @@ console.log('TRINFINITY LOADING');
     mes.dataset.tfAvatar = avatarUrl;
     tf_enhanced.add(mes);
 
-    /* ── FADE — inject banner above mes_block ── */
     if (cfg.style === 'fade') {
+      /* Remove any sidebar portrait that may exist */
+      wrapper.innerHTML = '';
       injectFadeBanner(mes, avatarUrl);
-      return;
+    } else {
+      /* Remove any fade banner that may exist */
+      mes.querySelector('.tf-fade-banner')?.remove();
+      injectSidebarPortrait(mes, avatarUrl, wrapper);
     }
-
-    /* ── All other styles — sidebar portrait ── */
-    injectSidebarPortrait(mes, avatarUrl, wrapper);
   }
 
   function injectFadeBanner(mes, avatarUrl) {
