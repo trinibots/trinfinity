@@ -490,40 +490,125 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   position: relative !important;
 }
 
-/* ── FADE — horizontal gradient dissolve into message ── */
-[data-tf-style="fade"] .tf-portrait {
-  border-radius: 0 !important;
+/* ── FADE — full-width portrait banner, melts into card ── */
+
+/* Hide the sidebar portrait wrapper for Fade */
+[data-tf-style="fade"] .mesAvatarWrapper {
+  display: none !important;
 }
 
-[data-tf-style="fade"] .mes[is_user="false"] .tf-portrait-img {
-  mask-image: linear-gradient(
-    to right,
-    black var(--tf-fade-start),
+/* Message card */
+[data-tf-style="fade"] .mes {
+  display: block !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 8px !important;
+  background: var(--tf-bg-surface) !important;
+  border: 1px solid var(--tf-accent-border-sub) !important;
+  margin-bottom: 4px !important;
+}
+
+[data-tf-style="fade"] .mes[is_user="true"] {
+  background: var(--tf-bg-user) !important;
+}
+
+/* Banner container — injected by JS */
+.tf-fade-banner {
+  width: 100% !important;
+  height: var(--tf-fade-banner-h, 200px) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.tf-fade-banner-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center var(--tf-fade-pos, 20%) !important;
+  display: block !important;
+  transition: object-position 0.3s ease !important;
+}
+
+/* Bottom fade — melts portrait into card */
+.tf-fade-banner::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    to bottom,
+    transparent var(--tf-fade-start),
     rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
-    transparent 100%
+    var(--tf-bg-surface) 100%
   ) !important;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    black var(--tf-fade-start),
+  pointer-events: none !important;
+}
+
+[data-tf-style="fade"] .mes[is_user="true"] .tf-fade-banner::after {
+  background: linear-gradient(
+    to bottom,
+    transparent var(--tf-fade-start),
     rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
-    transparent 100%
+    var(--tf-bg-user) 100%
   ) !important;
 }
 
-[data-tf-style="fade"] .mes[is_user="true"] .tf-portrait-img {
-  mask-image: linear-gradient(
-    to left,
-    black var(--tf-fade-start),
-    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
-    transparent 100%
-  ) !important;
-  -webkit-mask-image: linear-gradient(
-    to left,
-    black var(--tf-fade-start),
-    rgba(0,0,0,var(--tf-fade-floor)) var(--tf-fade-reach),
-    transparent 100%
-  ) !important;
+/* Thumbnail + name overlay on banner */
+.tf-fade-overlay {
+  position: absolute !important;
+  bottom: 10px !important;
+  left: 12px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 10px !important;
+  z-index: 2 !important;
 }
+
+.tf-fade-thumb {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 4px !important;
+  object-fit: cover !important;
+  object-position: top center !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  flex-shrink: 0 !important;
+}
+
+.tf-fade-meta {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.tf-fade-name {
+  font-family: var(--tf-font-display) !important;
+  font-size: var(--tf-font-display-size) !important;
+  letter-spacing: var(--tf-font-display-ls) !important;
+  text-transform: uppercase !important;
+  color: var(--tf-text) !important;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8) !important;
+}
+
+.tf-fade-stats {
+  font-size: 10px !important;
+  color: rgba(255,255,255,0.65) !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9) !important;
+}
+
+/* Message body */
+[data-tf-style="fade"] .mes_block {
+  background: transparent !important;
+  border: none !important;
+  padding: 8px 14px 14px !important;
+}
+
+/* Move action buttons to after the banner */
+[data-tf-style="fade"] .mes_buttons {
+  position: absolute !important;
+  top: 6px !important;
+  right: 8px !important;
+  z-index: 3 !important;
+}
+
 
 /* ── PULSE — vertical line only, NO animation on portrait ── */
 [data-tf-style="pulse"] .tf-portrait {
@@ -624,45 +709,13 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 
 /* ============================================================
    TRINFINITY — styles/trinfinity-fade.css
-   Fade: architectural softness · portrait dissolves into strip
-   Fader controls start, reach, floor opacity
+   Fade: portrait banner bleeds into card · architectural softness
    ============================================================ */
 
-[data-tf-style="fade"] .mes {
-  display: flex !important;
-  align-items: stretch !important;
-  position: relative !important;
-  overflow: hidden !important;
-  border-radius: 2px !important;
-  margin-bottom: 1px !important;
-}
-
-[data-tf-style="fade"] .mes[is_user="false"] {
-  background: var(--tf-bg-surface) !important;
-  border-left: 2px solid var(--tf-accent) !important;
-  min-height: 80px !important;
-}
-
-[data-tf-style="fade"] .mes[is_user="true"] {
-  background: var(--tf-bg-user) !important;
-  border-right: 2px solid var(--tf-accent-border) !important;
-  border-left: none !important;
-  flex-direction: row-reverse !important;
-  min-height: 80px !important;
-}
-
-[data-tf-style="fade"] .mesAvatarWrapper {
-  position: relative !important;
-  z-index: 1 !important;
-  flex-shrink: 0 !important;
-  align-self: stretch !important;
-}
-
-[data-tf-style="fade"] .mes_block {
-  background: transparent !important;
-  border: none !important;
-  padding: 12px 16px !important;
-  flex: 1 !important;
+/* Banner height default */
+:root {
+  --tf-fade-banner-h: 200px;
+  --tf-fade-pos: 20%;
 }
 
 /* ============================================================
