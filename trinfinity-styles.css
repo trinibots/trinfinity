@@ -547,6 +547,14 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
 /* Name + meta sits between banner and text */
 [data-tf-style="fade"] .ch_name {
   padding: 6px 14px 4px !important;
+  background: linear-gradient(to bottom, transparent, var(--tf-bg-surface) 80%) !important;
+  margin-top: -40px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+[data-tf-style="fade"] .mes[is_user="true"] .ch_name {
+  background: linear-gradient(to bottom, transparent, var(--tf-bg-user) 80%) !important;
 }
 
 /* Text body */
@@ -554,12 +562,18 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   padding: 4px 14px 14px !important;
 }
 
-/* Action buttons */
+/* Action buttons — semi-transparent pill */
 [data-tf-style="fade"] .mes_buttons {
   position: absolute !important;
   top: 6px !important;
   right: 8px !important;
   z-index: 3 !important;
+  background: rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border-radius: 20px !important;
+  padding: 2px 6px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
 }
 
 
