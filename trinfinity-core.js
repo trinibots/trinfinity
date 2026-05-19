@@ -21,7 +21,7 @@ console.log('TRINFINITY LOADING');
     btnX: '20px', btnY: '80px',
     uiMode: 'auto', /* 'button' | 'menu' | 'auto' */
     portraitW: 120, portraitH: 160, portraitScale: 100,
-    gossamerBlur: 10, gossamerOpacity: 72, gossamerFeatherX: 20, gossamerFeatherY: 15,
+    gossamerBlur: 10, gossamerOpacity: 72, gossamerFeatherX: 20,
     fadeStart: 40, fadeReach: 70, fadeFloor: 8,
     pulseSpeed: 2.4, pulseIntensity: 70, pulseRadius: 8,
     pulseR: 139, pulseG: 92, pulseB: 246, pulseAuto: true,
@@ -49,7 +49,6 @@ console.log('TRINFINITY LOADING');
     setVar('--tf-gossamer-blur',        cfg.gossamerBlur + 'px');
     setVar('--tf-gossamer-opacity',     (cfg.gossamerOpacity / 100).toFixed(2));
     setVar('--tf-gossamer-feather-x',   cfg.gossamerFeatherX + '%');
-    setVar('--tf-gossamer-feather-y',   cfg.gossamerFeatherY + '%');
     setVar('--tf-fade-start',           cfg.fadeStart + '%');
     setVar('--tf-fade-reach',           cfg.fadeReach + '%');
     setVar('--tf-fade-floor',           (cfg.fadeFloor / 100).toFixed(2));
