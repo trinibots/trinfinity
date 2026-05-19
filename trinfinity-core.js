@@ -78,16 +78,25 @@ console.log('TRINFINITY LOADING');
     const chat = document.getElementById('chat');
     if (chat) chat.setAttribute('data-tf-style', style);
     cfg.style = style;
+
+    /* Always reset enhanced state so messages get re-processed for new style */
+    document.querySelectorAll('#chat .mes').forEach(m => {
+      tf_enhanced.delete(m);
+      /* Remove existing portraits when switching away from sidebar styles */
+      if (prevStyle !== 'fade' && style !== prevStyle) {
+        m.querySelector('.tf-portrait')?.closest('.mesAvatarWrapper')?.querySelectorAll('.tf-portrait').forEach(p => p.remove());
+      }
+    });
+
     if (style === 'fade') {
       /* Set --mes-avatar-url on all existing messages */
       document.querySelectorAll('#chat .mes').forEach(m => {
         const url = m.dataset.tfAvatar;
         if (url) m.style.setProperty('--mes-avatar-url', `url("${url}")`);
       });
-      /* Re-enhance unprocessed messages */
-      document.querySelectorAll('#chat .mes').forEach(m => tf_enhanced.delete(m));
-      setTimeout(enhanceAllMessages, 100);
     }
+
+    setTimeout(enhanceAllMessages, 100);
   }
 
 
@@ -236,15 +245,17 @@ console.log('TRINFINITY LOADING');
     /* Fade uses CSS ::before with avatar URL set as inline CSS variable */
     if (cfg.style === 'fade') {
       mes.style.setProperty('--mes-avatar-url', `url("${avatarUrl}")`);
-      /* Move stats from hidden wrapper into ch_name */
-      const chName = mes.querySelector('.ch_name');
-      const mesId  = wrapper.querySelector('.mesIDDisplay');
-      const timer  = wrapper.querySelector('.mes_timer');
-      const tokens = wrapper.querySelector('.tokenCounterDisplay');
-      if (chName) {
-        if (mesId)  { mesId.className  += ' tf-stat'; chName.appendChild(mesId); }
-        if (timer)  { timer.className  += ' tf-stat'; chName.appendChild(timer); }
-        if (tokens) { tokens.className += ' tf-stat'; chName.appendChild(tokens); }
+      /* Move stats above ch_name */
+      const mesBlock = mes.querySelector('.mes_block');
+      const chName   = mes.querySelector('.ch_name');
+      const mesId    = wrapper.querySelector('.mesIDDisplay');
+      const tokens   = wrapper.querySelector('.tokenCounterDisplay');
+      if (mesBlock && chName && (mesId || tokens)) {
+        const statsRow = document.createElement('div');
+        statsRow.className = 'tf-fade-stats-row';
+        if (mesId)  { mesId.className  += ' tf-stat'; statsRow.appendChild(mesId); }
+        if (tokens) { tokens.className += ' tf-stat'; statsRow.appendChild(tokens); }
+        mesBlock.insertBefore(statsRow, chName);
       }
       return;
     }
