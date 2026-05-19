@@ -527,7 +527,7 @@ hr { border-color: var(--tf-accent-border-mid) !important; }
   display: block !important;
   width: 100% !important;
   height: var(--tf-fade-banner-h, 200px) !important;
-  background: var(--mes-avatar-original-url, var(--mes-avatar-url)) center var(--tf-fade-pos, 20%) / cover no-repeat !important;
+  background: var(--mes-avatar-url) center var(--tf-fade-pos, 20%) / cover no-repeat !important;
   mask-image: linear-gradient(
     to bottom,
     black var(--tf-fade-start),
